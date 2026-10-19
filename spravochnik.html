@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Справочник по МКТ и термодинамике для 10–11 классов</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&family=Newsreader:ital,wght@0,500;1,500;1,600&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --ink:#eceefc; --muted:#a3a9d0; --line:rgba(255,255,255,.14);
+  --cM:#3fd6d3; --cT:#ff8a5c; --cV:#aaa0ff; --cP:#ffcb3d;
+  --bg:#0b0e24; --glass:rgba(26,30,70,.62); --glass-bd:rgba(255,255,255,.1);
+  --shadow:0 24px 60px -30px rgba(0,0,0,.8);
+  --soft:rgba(255,255,255,.16); --soft2:rgba(255,255,255,.09); --surface:rgba(255,255,255,.07); --surface-hover:rgba(255,255,255,.15);
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  --sans:'Manrope',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:smooth;scroll-padding-top:16px}
+body{
+  margin:0;color:var(--ink);font:16px/1.6 var(--sans);min-height:100vh;
+  background:
+    radial-gradient(900px 520px at 8% -8%,rgba(109,94,240,.32) 0,transparent 60%),
+    radial-gradient(800px 520px at 100% 8%,rgba(20,184,181,.18) 0,transparent 60%),
+    radial-gradient(700px 500px at 60% 105%,rgba(240,98,45,.14) 0,transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+}
+.wrap{max-width:1160px;margin:0 auto;padding:24px 22px 40px}
+.topbar{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.btn{display:inline-block;text-decoration:none;font:600 .92rem var(--sans);cursor:pointer;padding:9px 16px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:background .15s,transform .15s}
+.btn:hover{background:var(--surface-hover);transform:translateY(-1px)}
+a:focus-visible,.btn:focus-visible,input:focus-visible{outline:3px solid var(--cV);outline-offset:2px}
+h1{font:800 clamp(1.9rem,5vw,3rem)/1.06 var(--sans);letter-spacing:-.03em;margin:0 0 10px}
+.lead{color:var(--muted);margin:0 0 22px;max-width:62ch}
+.search{width:100%;max-width:520px;font:inherit;padding:12px 16px;border-radius:16px;border:1px solid var(--line);background:var(--surface);color:var(--ink);margin-bottom:24px}
+.layout{display:grid;grid-template-columns:250px 1fr;gap:26px;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+nav{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;padding:14px;border-radius:22px;background:var(--glass);border:1px solid var(--glass-bd);box-shadow:var(--shadow)}
+@media(max-width:900px){nav{position:static;max-height:none}}
+nav a{display:block;padding:7px 10px;border-radius:10px;color:var(--muted);text-decoration:none;font-size:.92rem;line-height:1.35}
+nav a:hover{background:var(--surface);color:var(--ink)}
+nav a.on{background:rgba(170,160,255,.18);color:var(--ink);font-weight:600}
+main{display:grid;gap:20px;min-width:0}
+.card{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--glass-bd);border-radius:26px;padding:26px;box-shadow:var(--shadow);min-width:0}
+.card h2{font:800 1.35rem/1.25 var(--sans);letter-spacing:-.015em;margin:0 0 6px}
+.lv{display:inline-flex;gap:6px;margin:0 0 14px}
+.lv i{font:600 .75rem/1 var(--sans);font-style:normal;padding:5px 10px;border-radius:99px;background:rgba(63,214,211,.16);color:var(--cM)}
+.lv i.b{background:rgba(255,203,61,.16);color:var(--cP)}
+h3{font:700 1rem/1.3 var(--sans);margin:20px 0 8px;color:var(--cV)}
+p{margin:8px 0}
+ul{margin:8px 0;padding-left:1.2em} li{margin:4px 0}
+.f{font:italic 500 1.2rem/1.7 var(--serif);padding:10px 16px;margin:8px 0;border-radius:14px;background:rgba(140,125,255,.14);overflow-x:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.f-body{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.f small{font:400 .88rem var(--sans);font-style:normal;color:var(--muted);white-space:normal;text-align:right}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;padding:0 4px;font-size:.95em}
+.frac .num{border-bottom:1px solid var(--ink);padding:0 2px 1px;line-height:1}
+.frac .den{padding:1px 2px 0;line-height:1}
+.note{margin:12px 0;padding:12px 16px;border-radius:14px;background:var(--soft2);border-left:4px solid var(--cP);font-size:.96rem}
+.tw{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;min-width:480px;font-size:.95rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.85rem}
+td:first-child{font-weight:600}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+[hidden]{display:none!important}
+.gp{margin:16px 0 22px}
+.gp .gt{font:800 1rem/1.3 var(--sans);margin:0 0 8px}
+.gx{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.gx.single{grid-template-columns:minmax(240px,340px);justify-content:start}
+@media(max-width:720px){.gx{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.gx{grid-template-columns:1fr}}
+.gx figure{margin:0;padding:10px 10px 8px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.gx figcaption{font-size:.82rem;line-height:1.35;color:var(--muted);text-align:center;margin-top:4px}
+.gp .gn{font-size:.93rem;color:var(--muted);margin:10px 0 0}
+footer{margin-top:20px;padding:22px;text-align:center;color:var(--muted);font-size:.9rem}
+@media(max-width:520px){.card{padding:18px;border-radius:20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="btn" href="mkt.html">Модель газа</a>
+    <a class="btn" href="test.html">Пройти тест</a>
+  </div>
+  <h1>Справочник по МКТ и термодинамике</h1>
+  <p class="lead">Теория и формулы, которые нужны для решения задач в 10 и 11 классах. Значок «10 класс» отмечает базовый материал, значок «11 класс» — более сложный: повторение и задачи повышенного уровня. Проверить формулы на практике можно в <a href="mkt.html" style="color:var(--cV)">модели газа</a>, а закрепить знания — в <a href="test.html" style="color:var(--cV)">тесте</a>.</p>
+  <input class="search" id="q" type="search" placeholder="Поиск по справочнику, например: изобара или КПД" aria-label="Поиск по справочнику">
+
+  <div class="layout">
+    <nav id="toc" aria-label="Содержание"></nav>
+    <main id="main">
+
+<section class="card" id="s1">
+<h2>1. Основные положения МКТ</h2>
+<div class="lv"><i>10 класс</i></div>
+<ul>
+<li>Все вещества состоят из мельчайших частиц: атомов, молекул, ионов.</li>
+<li>Частицы непрерывно и беспорядочно (хаотично) движутся. Скорость этого движения растёт с температурой.</li>
+<li>Частицы взаимодействуют: на малых расстояниях отталкиваются, на больших притягиваются.</li>
+</ul>
+<h3>Опытные доказательства</h3>
+<ul>
+<li><b>Диффузия</b> — самопроизвольное перемешивание веществ. Быстрее всего идёт в газах, медленнее в жидкостях и ещё медленнее в твёрдых телах. С ростом температуры ускоряется.</li>
+<li><b>Броуновское движение</b> — хаотическое движение мелких частиц в жидкости или газе под ударами молекул.</li>
+</ul>
+<h3>Агрегатные состояния вещества</h3>
+<div class="tw"><table>
+<tr><th>Состояние</th><th>Расстояние между молекулами</th><th>Характер движения</th><th>Форма и объём</th></tr>
+<tr><td>Газ</td><td>много больше размеров молекул</td><td>свободный полёт, редкие столкновения</td><td>нет своей формы и постоянного объёма</td></tr>
+<tr><td>Жидкость</td><td>порядка размера молекулы</td><td>колебания около положения равновесия и перескоки</td><td>сохраняет объём, принимает форму сосуда</td></tr>
+<tr><td>Твёрдое тело</td><td>порядка размера молекулы</td><td>колебания около положений равновесия</td><td>сохраняет форму и объём</td></tr>
+<tr><td>Плазма</td><td>как у газа, но частицы заряжены (электроны, ионы) и взаимодействуют на большом расстоянии</td><td>хаотическое тепловое движение заряженных и нейтральных частиц</td><td>нет своей формы и постоянного объёма</td></tr>
+</table></div>
+<h3>Плазма — четвёртое состояние вещества</h3>
+<ul>
+<li><b>Плазма</b> — ионизированный газ, в котором заметная часть атомов или молекул потеряла электроны. В целом она электрически нейтральна: суммарный положительный заряд равен отрицательному.</li>
+<li>Образуется при очень высокой температуре (порядка тысяч кельвинов и выше) или в сильном электрическом разряде, когда столкновения частиц разрывают атомы на ионы и электроны.</li>
+<li>Хорошо проводит электрический ток и сильно реагирует на электрические и магнитные поля, чем отличается от обычного газа.</li>
+<li>Примеры: Солнце и звёзды, молния, полярные сияния, свечение неоновых ламп и ламп дневного света, термоядерная плазма в установках типа токамак. Большая часть видимого вещества во Вселенной находится в состоянии плазмы.</li>
+<li>Для достаточно разреженной горячей плазмы модель идеального газа работает приближённо: <i>p</i> = <i>n</i>·<i>k</i>·<i>T</i>, где <i>n</i> — полная концентрация всех частиц (электронов, ионов и нейтральных атомов).</li>
+</ul>
+</section>
+
+<section class="card" id="s2">
+<h2>2. Количественные характеристики вещества</h2>
+<div class="lv"><i>10 класс</i></div>
+<div class="f"><span class="f-body">ν = <span class="frac"><span class="num">N</span><span class="den">N<sub>A</sub></span></span> = <span class="frac"><span class="num">m</span><span class="den">M</span></span></span><small>количество вещества, моль</small></div>
+<div class="f"><span class="f-body">N<sub>A</sub> = 6,02·10²³ моль⁻¹</span><small>постоянная Авогадро</small></div>
+<div class="f"><span class="f-body">M = m<sub>0</sub>·N<sub>A</sub> &nbsp;⇒&nbsp; m<sub>0</sub> = <span class="frac"><span class="num">M</span><span class="den">N<sub>A</sub></span></span></span><small>масса одной молекулы</small></div>
+<div class="f"><span class="f-body">N = ν·N<sub>A</sub> = <span class="frac"><span class="num">m·N<sub>A</sub></span><span class="den">M</span></span></span><small>число молекул</small></div>
+<div class="f"><span class="f-body">n = <span class="frac"><span class="num">N</span><span class="den">V</span></span></span><small>концентрация, м⁻³</small></div>
+<div class="f"><span class="f-body">ρ = <span class="frac"><span class="num">m</span><span class="den">V</span></span> = n·m<sub>0</sub></span><small>плотность</small></div>
+<ul>
+<li>Молярная масса в кг/моль численно равна относительной молекулярной массе M<sub>r</sub>, умноженной на 10⁻³. Например, для воды M<sub>r</sub> = 18, значит M = 18·10⁻³ кг/моль.</li>
+<li>Атомная единица массы: 1 а.е.м. ≈ 1,66·10⁻²⁷ кг.</li>
+<li><b>Закон Авогадро.</b> В равных объёмах разных газов при одинаковых давлении и температуре содержится одинаковое число молекул.</li>
+</ul>
+</section>
+
+<section class="card" id="s3">
+<h2>3. Идеальный газ и основное уравнение МКТ</h2>
+<div class="lv"><i>10 класс</i></div>
+<p><b>Идеальный газ</b> — модель: молекулы считаются материальными точками, не взаимодействующими на расстоянии, а столкновения упругие. Модель хорошо работает при невысоких давлениях и не слишком низких температурах.</p>
+<p>Давление газа возникает из-за ударов молекул о стенки сосуда.</p>
+<div class="f"><span class="f-body">p = <span class="frac"><span class="num">1</span><span class="den">3</span></span>·m<sub>0</sub>·n·⟨v²⟩</span><small>основное уравнение МКТ</small></div>
+<div class="f"><span class="f-body">p = <span class="frac"><span class="num">2</span><span class="den">3</span></span>·n·⟨E<sub>k</sub>⟩</span></div>
+<div class="f"><span class="f-body">p = <span class="frac"><span class="num">1</span><span class="den">3</span></span>·ρ·⟨v²⟩</span></div>
+<div class="note">⟨v²⟩ — средний квадрат скорости молекул, ⟨E<sub>k</sub>⟩ = m<sub>0</sub>⟨v²⟩/2 — средняя кинетическая энергия поступательного движения одной молекулы.</div>
+</section>
+
+<section class="card" id="s4">
+<h2>4. Температура и скорости молекул</h2>
+<div class="lv"><i>10 класс</i><i class="b">11 класс</i></div>
+<div class="f"><span class="f-body">T = t + 273,15</span><small>T в кельвинах, t в °C</small></div>
+<div class="f"><span class="f-body">ΔT = Δt</span><small>изменения в К и °C одинаковы</small></div>
+<div class="f"><span class="f-body">⟨E<sub>k</sub>⟩ = <span class="frac"><span class="num">3</span><span class="den">2</span></span>·k·T</span><small>k = 1,38·10⁻²³ Дж/К — постоянная Больцмана</small></div>
+<div class="f"><span class="f-body">p = n·k·T</span></div>
+<div class="f"><span class="f-body">R = k·N<sub>A</sub> = 8,31 Дж/(моль·К)</span></div>
+<div class="f"><span class="f-body">v<sub>кв</sub> = √⟨v²⟩ = <span class="frac"><span class="num">3k T</span><span class="den">m<sub>0</sub></span></span> = <span class="frac"><span class="num">3R T</span><span class="den">M</span></span></span><small>среднеквадратичная скорость</small></div>
+<ul>
+<li>Абсолютная температура пропорциональна средней кинетической энергии молекул. При T = 0 К движение молекул прекращается (недостижимо).</li>
+<li>Если T выросла в 4 раза, v<sub>кв</sub> выросла в 2 раза. При одной температуре лёгкие молекулы движутся быстрее тяжёлых.</li>
+</ul>
+<h3>Распределение молекул по скоростям (повышенный уровень)</h3>
+<p>Молекулы газа движутся с разными скоростями (распределение Максвелла). Три характерные скорости:</p>
+<div class="f"><span class="f-body">v<sub>вер</sub> = <span class="frac"><span class="num">2RT</span><span class="den">M</span></span> &nbsp;&lt;&nbsp; v<sub>ср</sub> = <span class="frac"><span class="num">8RT</span><span class="den">πM</span></span> &nbsp;&lt;&nbsp; v<sub>кв</sub> = <span class="frac"><span class="num">3RT</span><span class="den">M</span></span></span></div>
+</section>
+
+<section class="card" id="s5">
+<h2>5. Уравнение состояния идеального газа</h2>
+<div class="lv"><i>10 класс</i></div>
+<div class="f"><span class="f-body">p·V = <span class="frac"><span class="num">m</span><span class="den">M</span></span>·R·T = ν·R·T</span><small>уравнение Менделеева — Клапейрона</small></div>
+<div class="f"><span class="f-body">p·V = N·k·T</span></div>
+<div class="f"><span class="f-body">p = <span class="frac"><span class="num">ρ·R·T</span><span class="den">M</span></span> &nbsp;⇒&nbsp; ρ = <span class="frac"><span class="num">p·M</span><span class="den">R·T</span></span></span><small>плотность газа</small></div>
+<div class="f"><span class="f-body"><span class="frac"><span class="num">p₁·V₁</span><span class="den">T₁</span></span> = <span class="frac"><span class="num">p₂·V₂</span><span class="den">T₂</span></span></span><small>объединённый газовый закон (m = const)</small></div>
+<h3>Нормальные условия</h3>
+<p>p<sub>н</sub> = 101 325 Па ≈ 10⁵ Па, T<sub>н</sub> = 273 К (0 °C). При этих условиях 1 моль любого идеального газа занимает объём V<sub>m</sub> ≈ 22,4 л = 22,4·10⁻³ м³.</p>
+<h3>Если масса газа меняется</h3>
+<p>При утечке или откачке газа в одном и том же сосуде запишите уравнение состояния для начального и конечного состояний отдельно: p₁V = (m₁/M)RT₁ и p₂V = (m₂/M)RT₂. Затем разделите уравнения друг на друга.</p>
+</section>
+
+<section class="card" id="s6">
+<h2>6. Изопроцессы и адиабатный процесс</h2>
+<div class="lv"><i>10 класс</i><i class="b">11 класс</i></div>
+<p>Для всех трёх процессов масса газа постоянна (m = const).</p>
+<div class="tw"><table>
+<tr><th>Процесс</th><th>Постоянно</th><th>Закон</th><th>График</th></tr>
+<tr><td>Изотермический</td><td>T</td><td>p₁V₁ = p₂V₂ (Бойль — Мариотт)</td><td>p–V: гипербола; p–T и V–T: вертикальные прямые</td></tr>
+<tr><td>Изобарный</td><td>p</td><td>V₁/T₁ = V₂/T₂ (Гей-Люссак)</td><td>V–T: прямая, продолжение проходит через начало координат; p–V: горизонталь</td></tr>
+<tr><td>Изохорный</td><td>V</td><td>p₁/T₁ = p₂/T₂ (Шарль)</td><td>p–T: прямая, продолжение проходит через начало координат; p–V: вертикаль</td></tr>
+</table></div>
+<ul>
+<li>Прямая в координатах V–T или p–T говорит о постоянстве p или V только если она (или её продолжение) проходит через начало координат при температуре в кельвинах.</li>
+<li>Чем круче прямая на V–T, тем меньше давление. На p–T чем круче прямая, тем меньше объём.</li>
+<li>Температуры в законах всегда подставляйте в кельвинах.</li>
+</ul>
+<h3>Адиабатный процесс</h3>
+<p><b>Адиабатный процесс</b> — процесс без теплообмена с окружающей средой (Q = 0). Он идёт в теплоизолированном сосуде или настолько быстро, что тепло не успевает передаться: например, при быстром сжатии воздуха в насосе или расширении газа в цилиндре двигателя. В отличие от изопроцессов, здесь меняются все три параметра: p, V и T.</p>
+<div class="f"><span class="f-body">p·V<sup>γ</sup> = const, &nbsp; T·V<sup>γ−1</sup> = const</span><small>γ = <span class="frac"><span class="num">C<sub>p</sub></span><span class="den">C<sub>V</sub></span></span> = <span class="frac"><span class="num">i+2</span><span class="den">i</span></span></small></div>
+<div class="f"><span class="f-body">p₁·V₁<sup>γ</sup> = p₂·V₂<sup>γ</sup>, &nbsp; T₁·V₁<sup>γ−1</sup> = T₂·V₂<sup>γ−1</sup></span></div>
+<div class="f"><span class="f-body">A = −ΔU = <span class="frac"><span class="num">i</span><span class="den">2</span></span>·ν·R·(T₁ − T₂) = <span class="frac"><span class="num">p₁V₁ − p₂V₂</span><span class="den">γ − 1</span></span></span><small>работа газа</small></div>
+<ul>
+<li>Из первого закона при Q = 0 получаем A = −ΔU. При расширении газ совершает работу за счёт внутренней энергии и охлаждается. При сжатии работа внешних сил увеличивает внутреннюю энергию, и газ нагревается.</li>
+<li>На диаграмме p–V адиабата идёт круче изотермы: при изменении объёма давление меняется сильнее, потому что вместе с ним меняется и температура.</li>
+<li>Показатель адиабаты γ: 5/3 для одноатомного газа, 7/5 для двухатомного, 4/3 для многоатомного.</li>
+<li>Примеры: нагревание насоса при быстрой накачке шины, воспламенение топлива при сжатии в дизельном двигателе, охлаждение газа, вырывающегося из баллона, образование облаков в поднимающемся воздухе.</li>
+<li>Посмотреть процесс можно в <a href="mkt.html" style="color:var(--cV)">модели газа</a>: кнопка «Адиабата» связывает температуру с объёмом по закону T·V<sup>γ−1</sup> = const.</li>
+</ul>
+<h3>Графики процессов</h3>
+<p>Стрелка показывает направление процесса от состояния 1 к состоянию 2. По осям отложены p — давление, V — объём, T — абсолютная температура в кельвинах.</p>
+<div class="gp"><div class="gt" style="color:#ff8a5c">Изотермический процесс (T = const)</div><div class="gx">
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Изотерма в координатах p–V: гипербола, при росте объёма давление падает" style="width:100%;height:auto;display:block">
+<defs><marker id="m1" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ff8a5c"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">p</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">V</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+<polyline points="84.0,22.0 86.9,28.7 89.8,34.7 92.7,40.0 95.6,44.9 98.4,49.3 101.3,53.3 104.2,57.0 107.1,60.3 110.0,63.5 112.9,66.3 115.8,69.0 118.7,71.5 121.6,73.8 124.4,76.0 127.3,78.0 130.2,79.9 133.1,81.7 136.0,83.4 138.9,85.0 141.8,86.5 144.7,87.9 147.6,89.2 150.4,90.5 153.3,91.7 156.2,92.9 159.1,94.0 162.0,95.0 164.9,96.1 167.8,97.0 170.7,97.9 173.6,98.8 176.4,99.7 179.3,100.5 182.2,101.3 185.1,102.0 188.0,102.7" fill="none" stroke="#ff8a5c" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="100.0,51.5 101.8,53.9 103.6,56.2 105.3,58.3 107.1,60.4 108.9,62.3 110.7,64.1 112.4,65.9 114.2,67.6 116.0,69.2 117.8,70.7 119.6,72.2 121.3,73.6 123.1,75.0 124.9,76.3 126.7,77.5 128.4,78.7 130.2,79.9 132.0,81.0 133.8,82.1 135.6,83.1 137.3,84.1 139.1,85.1 140.9,86.0 142.7,86.9 144.4,87.8 146.2,88.6 148.0,89.4 149.8,90.2 151.6,91.0 153.3,91.7 155.1,92.4 156.9,93.1 158.7,93.8 160.4,94.5 162.2,95.1 164.0,95.8" fill="none" stroke="#ff8a5c" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m1)"/>
+<circle cx="100.0" cy="51.5" r="4.4" fill="#ff8a5c" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="110.0" y="43.5" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="164.0" cy="95.8" r="4.4" fill="#ff8a5c" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="174.0" y="87.8" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>p–V: гипербола</figcaption></figure>
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Изотерма в координатах V–T: вертикальная прямая, объём растёт" style="width:100%;height:auto;display:block">
+<defs><marker id="m2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ff8a5c"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">V</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">T</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+<polyline points="132.0,125.8 132.0,121.1 132.0,116.4 132.0,111.7 132.0,107.0 132.0,102.2 132.0,97.5 132.0,92.8 132.0,88.1 132.0,83.4 132.0,78.6 132.0,73.9 132.0,69.2 132.0,64.5 132.0,59.8 132.0,55.0 132.0,50.3 132.0,45.6 132.0,40.9 132.0,36.2 132.0,31.4" fill="none" stroke="#ff8a5c" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="132.0,104.6 132.0,102.2 132.0,99.9 132.0,97.5 132.0,95.2 132.0,92.8 132.0,90.4 132.0,88.1 132.0,85.7 132.0,83.4 132.0,81.0 132.0,78.6 132.0,76.3 132.0,73.9 132.0,71.6 132.0,69.2 132.0,66.8 132.0,64.5 132.0,62.1 132.0,59.8 132.0,57.4" fill="none" stroke="#ff8a5c" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m2)"/>
+<circle cx="132.0" cy="104.6" r="4.4" fill="#ff8a5c" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="120.0" y="108.6" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="132.0" cy="57.4" r="4.4" fill="#ff8a5c" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="120.0" y="61.4" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>V–T: вертикальная прямая</figcaption></figure>
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Изотерма в координатах p–T: вертикальная прямая, давление падает" style="width:100%;height:auto;display:block">
+<defs><marker id="m3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ff8a5c"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">p</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">T</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+<polyline points="132.0,125.8 132.0,121.1 132.0,116.4 132.0,111.7 132.0,107.0 132.0,102.2 132.0,97.5 132.0,92.8 132.0,88.1 132.0,83.4 132.0,78.6 132.0,73.9 132.0,69.2 132.0,64.5 132.0,59.8 132.0,55.0 132.0,50.3 132.0,45.6 132.0,40.9 132.0,36.2 132.0,31.4" fill="none" stroke="#ff8a5c" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="132.0,51.5 132.0,53.7 132.0,55.9 132.0,58.1 132.0,60.3 132.0,62.6 132.0,64.8 132.0,67.0 132.0,69.2 132.0,71.4 132.0,73.6 132.0,75.8 132.0,78.0 132.0,80.3 132.0,82.5 132.0,84.7 132.0,86.9 132.0,89.1 132.0,91.3 132.0,93.5 132.0,95.8" fill="none" stroke="#ff8a5c" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m3)"/>
+<circle cx="132.0" cy="51.5" r="4.4" fill="#ff8a5c" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="120.0" y="55.5" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="132.0" cy="95.8" r="4.4" fill="#ff8a5c" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="120.0" y="99.8" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>p–T: вертикальная прямая</figcaption></figure>
+</div><p class="gn">Расширение 1→2: объём растёт, давление падает, температура не меняется. Чем выше температура, тем дальше от осей лежит гипербола.</p></div>
+<div class="gp"><div class="gt" style="color:#ffcb3d">Изобарный процесс (p = const)</div><div class="gx">
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Изобара в координатах p–V: горизонтальная прямая, объём растёт" style="width:100%;height:auto;display:block">
+<defs><marker id="m4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ffcb3d"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">p</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">V</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+<polyline points="48.8,75.1 55.8,75.1 62.7,75.1 69.7,75.1 76.6,75.1 83.6,75.1 90.6,75.1 97.5,75.1 104.5,75.1 111.4,75.1 118.4,75.1 125.4,75.1 132.3,75.1 139.3,75.1 146.2,75.1 153.2,75.1 160.2,75.1 167.1,75.1 174.1,75.1 181.0,75.1 188.0,75.1" fill="none" stroke="#ffcb3d" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="84.0,75.1 87.2,75.1 90.4,75.1 93.6,75.1 96.8,75.1 100.0,75.1 103.2,75.1 106.4,75.1 109.6,75.1 112.8,75.1 116.0,75.1 119.2,75.1 122.4,75.1 125.6,75.1 128.8,75.1 132.0,75.1 135.2,75.1 138.4,75.1 141.6,75.1 144.8,75.1 148.0,75.1" fill="none" stroke="#ffcb3d" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m4)"/>
+<circle cx="84.0" cy="75.1" r="4.4" fill="#ffcb3d" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="84.0" y="65.1" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="148.0" cy="75.1" r="4.4" fill="#ffcb3d" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="148.0" y="65.1" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>p–V: горизонтальная прямая</figcaption></figure>
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Изобара в координатах V–T: прямая, продолжение проходит через начало координат" style="width:100%;height:auto;display:block">
+<defs><marker id="m5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ffcb3d"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">V</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">T</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+<polyline points="36.0,140.0 43.6,134.4 51.2,128.8 58.8,123.2 66.4,117.6 74.0,112.0 81.6,106.4 89.2,100.8 96.8,95.2 104.4,89.6 112.0,84.0 119.6,78.3 127.2,72.7 134.8,67.1 142.4,61.5 150.0,55.9 157.6,50.3 165.2,44.7 172.8,39.1 180.4,33.5 188.0,27.9" fill="none" stroke="#ffcb3d" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="92.0,98.7 95.2,96.3 98.4,94.0 101.6,91.6 104.8,89.3 108.0,86.9 111.2,84.5 114.4,82.2 117.6,79.8 120.8,77.5 124.0,75.1 127.2,72.7 130.4,70.4 133.6,68.0 136.8,65.7 140.0,63.3 143.2,60.9 146.4,58.6 149.6,56.2 152.8,53.9 156.0,51.5" fill="none" stroke="#ffcb3d" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m5)"/>
+<circle cx="92.0" cy="98.7" r="4.4" fill="#ffcb3d" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="80.0" y="94.7" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="156.0" cy="51.5" r="4.4" fill="#ffcb3d" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="144.0" y="47.5" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>V–T: прямая через начало координат</figcaption></figure>
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Изобара в координатах p–T: горизонтальная прямая, температура растёт" style="width:100%;height:auto;display:block">
+<defs><marker id="m6" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ffcb3d"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">p</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">T</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+<polyline points="48.8,75.1 55.8,75.1 62.7,75.1 69.7,75.1 76.6,75.1 83.6,75.1 90.6,75.1 97.5,75.1 104.5,75.1 111.4,75.1 118.4,75.1 125.4,75.1 132.3,75.1 139.3,75.1 146.2,75.1 153.2,75.1 160.2,75.1 167.1,75.1 174.1,75.1 181.0,75.1 188.0,75.1" fill="none" stroke="#ffcb3d" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="92.0,75.1 95.2,75.1 98.4,75.1 101.6,75.1 104.8,75.1 108.0,75.1 111.2,75.1 114.4,75.1 117.6,75.1 120.8,75.1 124.0,75.1 127.2,75.1 130.4,75.1 133.6,75.1 136.8,75.1 140.0,75.1 143.2,75.1 146.4,75.1 149.6,75.1 152.8,75.1 156.0,75.1" fill="none" stroke="#ffcb3d" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m6)"/>
+<circle cx="92.0" cy="75.1" r="4.4" fill="#ffcb3d" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="92.0" y="65.1" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="156.0" cy="75.1" r="4.4" fill="#ffcb3d" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="156.0" y="65.1" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>p–T: горизонтальная прямая</figcaption></figure>
+</div><p class="gn">Нагревание 1→2: температура и объём растут, давление постоянно. Прямая на V–T продолжается до начала координат: объём пропорционален температуре.</p></div>
+<div class="gp"><div class="gt" style="color:#aaa0ff">Изохорный процесс (V = const)</div><div class="gx">
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Изохора в координатах p–V: вертикальная прямая, давление растёт" style="width:100%;height:auto;display:block">
+<defs><marker id="m7" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#aaa0ff"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">p</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">V</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+<polyline points="116.0,130.6 116.0,125.4 116.0,120.3 116.0,115.2 116.0,110.0 116.0,104.9 116.0,99.8 116.0,94.6 116.0,89.5 116.0,84.4 116.0,79.2 116.0,74.1 116.0,69.0 116.0,63.8 116.0,58.7 116.0,53.6 116.0,48.4 116.0,43.3 116.0,38.2 116.0,33.0 116.0,27.9" fill="none" stroke="#aaa0ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="116.0,104.6 116.0,102.2 116.0,99.9 116.0,97.5 116.0,95.2 116.0,92.8 116.0,90.4 116.0,88.1 116.0,85.7 116.0,83.4 116.0,81.0 116.0,78.6 116.0,76.3 116.0,73.9 116.0,71.6 116.0,69.2 116.0,66.8 116.0,64.5 116.0,62.1 116.0,59.8 116.0,57.4" fill="none" stroke="#aaa0ff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m7)"/>
+<circle cx="116.0" cy="104.6" r="4.4" fill="#aaa0ff" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="104.0" y="108.6" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="116.0" cy="57.4" r="4.4" fill="#aaa0ff" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="104.0" y="61.4" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>p–V: вертикальная прямая</figcaption></figure>
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Изохора в координатах V–T: горизонтальная прямая, температура растёт" style="width:100%;height:auto;display:block">
+<defs><marker id="m8" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#aaa0ff"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">V</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">T</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+<polyline points="48.8,75.1 55.8,75.1 62.7,75.1 69.7,75.1 76.6,75.1 83.6,75.1 90.6,75.1 97.5,75.1 104.5,75.1 111.4,75.1 118.4,75.1 125.4,75.1 132.3,75.1 139.3,75.1 146.2,75.1 153.2,75.1 160.2,75.1 167.1,75.1 174.1,75.1 181.0,75.1 188.0,75.1" fill="none" stroke="#aaa0ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="92.0,75.1 95.2,75.1 98.4,75.1 101.6,75.1 104.8,75.1 108.0,75.1 111.2,75.1 114.4,75.1 117.6,75.1 120.8,75.1 124.0,75.1 127.2,75.1 130.4,75.1 133.6,75.1 136.8,75.1 140.0,75.1 143.2,75.1 146.4,75.1 149.6,75.1 152.8,75.1 156.0,75.1" fill="none" stroke="#aaa0ff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m8)"/>
+<circle cx="92.0" cy="75.1" r="4.4" fill="#aaa0ff" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="92.0" y="65.1" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="156.0" cy="75.1" r="4.4" fill="#aaa0ff" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="156.0" y="65.1" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>V–T: горизонтальная прямая</figcaption></figure>
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Изохора в координатах p–T: прямая, продолжение проходит через начало координат" style="width:100%;height:auto;display:block">
+<defs><marker id="m9" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#aaa0ff"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">p</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">T</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+<polyline points="36.0,140.0 43.6,134.4 51.2,128.8 58.8,123.2 66.4,117.6 74.0,112.0 81.6,106.4 89.2,100.8 96.8,95.2 104.4,89.6 112.0,84.0 119.6,78.3 127.2,72.7 134.8,67.1 142.4,61.5 150.0,55.9 157.6,50.3 165.2,44.7 172.8,39.1 180.4,33.5 188.0,27.9" fill="none" stroke="#aaa0ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="92.0,98.7 95.2,96.3 98.4,94.0 101.6,91.6 104.8,89.3 108.0,86.9 111.2,84.5 114.4,82.2 117.6,79.8 120.8,77.5 124.0,75.1 127.2,72.7 130.4,70.4 133.6,68.0 136.8,65.7 140.0,63.3 143.2,60.9 146.4,58.6 149.6,56.2 152.8,53.9 156.0,51.5" fill="none" stroke="#aaa0ff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m9)"/>
+<circle cx="92.0" cy="98.7" r="4.4" fill="#aaa0ff" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="80.0" y="94.7" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="156.0" cy="51.5" r="4.4" fill="#aaa0ff" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="144.0" y="47.5" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>p–T: прямая через начало координат</figcaption></figure>
+</div><p class="gn">Нагревание 1→2: температура и давление растут, объём постоянен.</p></div>
+<div class="gp"><div class="gt" style="color:#3fd6d3">Адиабатный процесс (Q = 0)</div><div class="gx">
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Адиабата в координатах p–V: кривая круче изотермы (изотерма показана пунктиром)" style="width:100%;height:auto;display:block">
+<defs><marker id="m10" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3fd6d3"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">p</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">V</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+<polyline points="84.0,22.0 86.9,28.7 89.8,34.7 92.7,40.0 95.6,44.9 98.4,49.3 101.3,53.3 104.2,57.0 107.1,60.3 110.0,63.5 112.9,66.3 115.8,69.0 118.7,71.5 121.6,73.8 124.4,76.0 127.3,78.0 130.2,79.9 133.1,81.7 136.0,83.4 138.9,85.0 141.8,86.5 144.7,87.9 147.6,89.2 150.4,90.5 153.3,91.7 156.2,92.9 159.1,94.0 162.0,95.0 164.9,96.1 167.8,97.0 170.7,97.9 173.6,98.8 176.4,99.7 179.3,100.5 182.2,101.3 185.1,102.0 188.0,102.7" fill="none" stroke="#a3a9d0" stroke-width="1.6" stroke-dasharray="5 4" stroke-linecap="round"/>
+<polyline points="88.8,24.1 91.6,32.1 94.3,39.2 97.1,45.5 99.8,51.1 102.6,56.2 105.3,60.9 108.1,65.1 110.8,68.9 113.6,72.4 116.4,75.6 119.1,78.6 121.9,81.3 124.6,83.9 127.4,86.2 130.1,88.4 132.9,90.5 135.6,92.4 138.4,94.2 141.2,95.8 143.9,97.4 146.7,98.9 149.4,100.3 152.2,101.6 154.9,102.8 157.7,104.0 160.4,105.1 163.2,106.2 166.0,107.2 168.7,108.1 171.5,109.0 174.2,109.9 177.0,110.7 179.7,111.5 182.5,112.2 185.2,112.9 188.0,113.6" fill="none" stroke="#3fd6d3" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="100.0,51.5 101.8,54.8 103.6,57.9 105.3,60.9 107.1,63.6 108.9,66.2 110.7,68.7 112.4,71.0 114.2,73.2 116.0,75.2 117.8,77.2 119.6,79.1 121.3,80.8 123.1,82.5 124.9,84.1 126.7,85.6 128.4,87.1 130.2,88.5 132.0,89.8 133.8,91.1 135.6,92.3 137.3,93.5 139.1,94.6 140.9,95.7 142.7,96.7 144.4,97.7 146.2,98.6 148.0,99.6 149.8,100.4 151.6,101.3 153.3,102.1 155.1,102.9 156.9,103.7 158.7,104.4 160.4,105.1 162.2,105.8 164.0,106.5" fill="none" stroke="#3fd6d3" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m10)"/>
+<circle cx="100.0" cy="51.5" r="4.4" fill="#3fd6d3" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="88.0" y="45.5" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="164.0" cy="106.5" r="4.4" fill="#3fd6d3" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="172.0" y="122.5" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>p–V: кривая круче изотермы (пунктир)</figcaption></figure>
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Адиабата в координатах V–T: кривая, при расширении температура падает" style="width:100%;height:auto;display:block">
+<defs><marker id="m11" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3fd6d3"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">V</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">T</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+<polyline points="195.9,116.4 190.1,114.1 184.9,111.8 180.3,109.5 176.2,107.2 172.5,104.9 169.1,102.6 165.9,100.3 163.0,98.0 160.4,95.8 157.9,93.5 155.5,91.2 153.4,88.9 151.3,86.6 149.4,84.3 147.6,82.0 145.9,79.7 144.2,77.4 142.7,75.1 141.2,72.8 139.8,70.5 138.5,68.2 137.2,65.9 136.0,63.6 134.8,61.3 133.7,59.0 132.6,56.7 131.5,54.5 130.5,52.2 129.6,49.9 128.6,47.6 127.7,45.3 126.8,43.0 126.0,40.7 125.2,38.4 124.4,36.1 123.6,33.8" fill="none" stroke="#3fd6d3" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="172.0,104.6 170.0,103.3 168.1,102.0 166.4,100.7 164.7,99.4 163.0,98.0 161.5,96.7 160.0,95.4 158.6,94.1 157.2,92.8 155.9,91.5 154.6,90.2 153.4,88.9 152.2,87.6 151.0,86.2 149.9,84.9 148.9,83.6 147.8,82.3 146.8,81.0 145.9,79.7 144.9,78.4 144.0,77.1 143.1,75.8 142.3,74.4 141.4,73.1 140.6,71.8 139.8,70.5 139.0,69.2 138.3,67.9 137.6,66.6 136.8,65.3 136.1,64.0 135.5,62.6 134.8,61.3 134.1,60.0 133.5,58.7 132.9,57.4" fill="none" stroke="#3fd6d3" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m11)"/>
+<circle cx="172.0" cy="104.6" r="4.4" fill="#3fd6d3" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="182.0" y="114.6" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="132.9" cy="57.4" r="4.4" fill="#3fd6d3" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="120.9" y="57.4" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>V–T: кривая T·V^(γ−1) = const</figcaption></figure>
+<figure><svg viewBox="0 0 224 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Адиабата в координатах p–T: кривая, при расширении давление и температура падают" style="width:100%;height:auto;display:block">
+<defs><marker id="m12" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3fd6d3"/></marker></defs>
+<g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,140 V16"/><path d="M36,140 H202"/></g>
+<g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M208,140 l-9,-4 v8 z"/></g>
+<text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">p</text>
+<text x="206" y="158" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">T</text>
+<text x="30" y="154" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+<polyline points="93.6,136.7 96.4,136.1 99.3,135.4 102.1,134.6 105.0,133.8 107.8,132.8 110.7,131.8 113.5,130.7 116.4,129.4 119.2,128.0 122.0,126.5 124.9,124.9 127.7,123.2 130.6,121.3 133.4,119.2 136.3,117.0 139.1,114.6 142.0,112.1 144.8,109.4 147.6,106.5 150.5,103.4 153.3,100.1 156.2,96.7 159.0,93.0 161.9,89.0 164.7,84.9 167.6,80.5 170.4,75.9 173.2,71.0 176.1,65.9 178.9,60.5 181.8,54.8 184.6,48.9 187.5,42.6 190.3,36.0 193.2,29.2 196.0,22.0" fill="none" stroke="#3fd6d3" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="180.0,58.4 178.9,60.6 177.8,62.7 176.7,64.8 175.6,66.9 174.4,68.9 173.3,70.9 172.2,72.8 171.1,74.7 170.0,76.6 168.9,78.4 167.8,80.2 166.7,81.9 165.6,83.6 164.4,85.3 163.3,86.9 162.2,88.5 161.1,90.1 160.0,91.6 158.9,93.1 157.8,94.6 156.7,96.0 155.6,97.4 154.4,98.8 153.3,100.1 152.2,101.5 151.1,102.7 150.0,104.0 148.9,105.2 147.8,106.4 146.7,107.5 145.6,108.7 144.4,109.8 143.3,110.8 142.2,111.9 141.1,112.9 140.0,113.9" fill="none" stroke="#3fd6d3" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m12)"/>
+<circle cx="180.0" cy="58.4" r="4.4" fill="#3fd6d3" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="167.0" y="54.4" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">1</text>
+<circle cx="140.0" cy="113.9" r="4.4" fill="#3fd6d3" stroke="#0b0e24" stroke-width="1.6"/>
+<text x="127.0" y="109.9" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="14" text-anchor="middle">2</text>
+</svg><figcaption>p–T: кривая p ∝ T^(γ/(γ−1))</figcaption></figure>
+</div><p class="gn">Расширение 1→2: газ совершает работу за счёт внутренней энергии, поэтому температура и давление падают, объём растёт. Для сжатия стрелки направлены в обратную сторону.</p></div>
+<div class="note"><b>Как читать графики.</b> Прямая на V–T или p–T соответствует изобаре или изохоре только в том случае, если её продолжение проходит через начало координат (T = 0 К). Если прямая не проходит через начало координат, количество газа или другой параметр меняется.</div>
+</section>
+
+<section class="card" id="s7">
+<h2>7. Смеси газов, столб жидкости и поршни</h2>
+<div class="lv"><i>10 класс</i><i class="b">11 класс</i></div>
+<div class="f"><span class="f-body">p = p₁ + p₂ + …</span><small>закон Дальтона</small></div>
+<div class="f"><span class="f-body">p<sub>i</sub> = <span class="frac"><span class="num">ν<sub>i</sub>·R·T</span><span class="den">V</span></span></span><small>парциальное давление</small></div>
+<div class="f"><span class="f-body">M<sub>см</sub> = <span class="frac"><span class="num">m₁ + m₂ + …</span><span class="den">ν₁ + ν₂ + …</span></span></span><small>молярная масса смеси</small></div>
+<p>Парциальное давление — давление, которое создавал бы этот газ, если бы один занимал весь объём.</p>
+<h3>Давление в задачах с жидкостью и поршнем</h3>
+<div class="f"><span class="f-body">p = ρ·g·h</span><small>давление столба жидкости</small></div>
+<div class="f"><span class="f-body">p<sub>газа</sub> = p₀ + ρ·g·h</span><small>газ под столбом жидкости в открытом сосуде</small></div>
+<div class="f"><span class="f-body">p·S = p₀·S + m·g</span><small>условие равновесия поршня</small></div>
+<ul>
+<li>Если трубка открыта сверху, а газ заперт снизу столбиком ртути, давление газа складывается из атмосферного и давления столбика.</li>
+<li>1 мм рт. ст. ≈ 133,3 Па. Столб ртути высотой 760 мм соответствует p₀ ≈ 101 325 Па.</li>
+<li>Расставьте силы на поршне, запишите условие равновесия, найдите давление газа, затем применяйте газовый закон.</li>
+</ul>
+</section>
+
+<section class="card" id="s8">
+<h2>8. Насыщенный пар и влажность</h2>
+<div class="lv"><i>10 класс</i></div>
+<ul>
+<li><b>Насыщенный пар</b> находится в динамическом равновесии со своей жидкостью: сколько молекул вылетает с поверхности, столько и возвращается.</li>
+<li>Давление и плотность насыщенного пара зависят только от температуры, но не от объёма. Уравнение состояния идеального газа для него неприменимо при изменении объёма (для ненасыщенного пара применимо).</li>
+<li>При изотермическом сжатии насыщенного пара давление не меняется, а часть пара конденсируется.</li>
+<li>Ненасыщенный пар можно сделать насыщенным охлаждением или сжатием.</li>
+</ul>
+<div class="f"><span class="f-body">φ = <span class="frac"><span class="num">p</span><span class="den">p<sub>н</sub></span></span>·100% = <span class="frac"><span class="num">ρ</span><span class="den">ρ<sub>н</sub></span></span>·100%</span><small>относительная влажность</small></div>
+<ul>
+<li>p — парциальное давление водяного пара в воздухе, p<sub>н</sub> — давление насыщенного пара при этой температуре.</li>
+<li>Абсолютная влажность — плотность водяного пара ρ (г/м³) или его парциальное давление p.</li>
+<li><b>Точка росы</b> — температура, при которой пар в воздухе становится насыщенным (φ = 100%), и начинается конденсация.</li>
+<li><b>Кипение</b> начинается, когда давление насыщенного пара жидкости становится равным внешнему давлению. Поэтому с понижением внешнего давления температура кипения уменьшается.</li>
+</ul>
+</section>
+
+<section class="card" id="s9">
+<h2>9. Внутренняя энергия, работа и первый закон термодинамики</h2>
+<div class="lv"><i>10 класс</i><i class="b">11 класс</i></div>
+<div class="f"><span class="f-body">U = <span class="frac"><span class="num">i</span><span class="den">2</span></span>·ν·R·T</span><small>внутренняя энергия идеального газа</small></div>
+<div class="f"><span class="f-body">ΔU = <span class="frac"><span class="num">i</span><span class="den">2</span></span>·ν·R·ΔT</span></div>
+<div class="tw"><table>
+<tr><th>Тип молекул</th><th>Число степеней свободы i</th><th>U</th></tr>
+<tr><td>Одноатомный газ (He, Ne, Ar)</td><td>3</td><td>(3/2)·ν·R·T = (3/2)·p·V</td></tr>
+<tr><td>Двухатомный газ (H₂, N₂, O₂) при обычных температурах</td><td>5</td><td>(5/2)·ν·R·T = (5/2)·p·V</td></tr>
+<tr><td>Многоатомный газ (CO₂, водяной пар)</td><td>6</td><td>3·ν·R·T = 3·p·V</td></tr>
+</table></div>
+<p>Внутренняя энергия идеального газа зависит только от температуры (потенциальной энергии взаимодействия нет).</p>
+<h3>Работа газа</h3>
+<div class="f"><span class="f-body">A = p·ΔV = p·(V₂ − V₁)</span><small>при p = const</small></div>
+<ul>
+<li>A &gt; 0 при расширении (газ совершает работу), A &lt; 0 при сжатии.</li>
+<li>На графике p–V работа численно равна площади под графиком процесса. Работа за цикл равна площади внутри замкнутого контура.</li>
+<li>Работа внешних сил над газом: A′ = −A.</li>
+</ul>
+<h3>Первый закон термодинамики</h3>
+<div class="f"><span class="f-body">Q = ΔU + A</span><small>Q — теплота, полученная газом</small></div>
+<div class="f"><span class="f-body">ΔU = Q + A′</span><small>эквивалентная запись</small></div>
+<div class="note">Знаки: Q &gt; 0, если газ получает тепло; A &gt; 0, если газ расширяется; ΔU &gt; 0, если температура растёт. В замкнутом цикле ΔU = 0, значит Q<sub>цикл</sub> = A<sub>цикл</sub>.</div>
+</section>
+
+<section class="card" id="s10">
+<h2>10. Первый закон для изопроцессов и теплоёмкости</h2>
+<div class="lv"><i class="b">11 класс</i></div>
+<div class="tw"><table>
+<tr><th>Процесс</th><th>Работа A</th><th>ΔU</th><th>Q</th></tr>
+<tr><td>Изохорный (V = const)</td><td>0</td><td>(i/2)νRΔT</td><td>ΔU</td></tr>
+<tr><td>Изобарный (p = const)</td><td>pΔV = νRΔT</td><td>(i/2)νRΔT</td><td>((i+2)/2)νRΔT</td></tr>
+<tr><td>Изотермический (T = const)</td><td>площадь под графиком; A = Q</td><td>0</td><td>A</td></tr>
+<tr><td>Адиабатный (Q = 0)</td><td>A = −ΔU = (i/2)νR(T₁ − T₂)</td><td>−A</td><td>0</td></tr>
+</table></div>
+<h3>Молярные теплоёмкости</h3>
+<div class="f"><span class="f-body">C<sub>V</sub> = <span class="frac"><span class="num">i</span><span class="den">2</span></span>·R, &nbsp; C<sub>p</sub> = <span class="frac"><span class="num">i+2</span><span class="den">2</span></span>·R, &nbsp; C<sub>p</sub> − C<sub>V</sub> = R</span></div>
+<div class="f"><span class="f-body">γ = <span class="frac"><span class="num">C<sub>p</sub></span><span class="den">C<sub>V</sub></span></span> = <span class="frac"><span class="num">i+2</span><span class="den">i</span></span></span><small>показатель адиабаты</small></div>
+<div class="f"><span class="f-body">p·V<sup>γ</sup> = const</span><small>уравнение адиабаты (Пуассон)</small></div>
+<ul>
+<li>Q = ν·C·ΔT, где C — молярная теплоёмкость в данном процессе.</li>
+<li>При адиабатном расширении газ совершает работу за счёт внутренней энергии и охлаждается, при сжатии нагревается.</li>
+<li>Изобарное нагревание требует больше тепла, чем изохорное, потому что часть тепла уходит на работу расширения.</li>
+</ul>
+</section>
+
+<section class="card" id="s11">
+<h2>11. Количество теплоты и уравнение теплового баланса</h2>
+<div class="lv"><i>10 класс</i></div>
+<div class="f"><span class="f-body">Q = c·m·(t₂ − t₁)</span><small>нагревание или охлаждение</small></div>
+<div class="f"><span class="f-body">Q = λ·m</span><small>плавление или кристаллизация</small></div>
+<div class="f"><span class="f-body">Q = L·m</span><small>парообразование или конденсация</small></div>
+<div class="f"><span class="f-body">Q = q·m</span><small>сгорание топлива</small></div>
+<div class="f"><span class="f-body">Q<sub>отд</sub> = Q<sub>пол</sub></span><small>уравнение теплового баланса</small></div>
+<ul>
+<li>Во время плавления и кипения температура вещества не меняется, всё тепло идёт на разрушение связей между молекулами.</li>
+<li>Если смешиваются два вещества без фазовых переходов: c₁m₁(t₁ − θ) = c₂m₂(θ − t₂), где θ — общая конечная температура.</li>
+<li>Чтобы понять, что произойдёт со льдом или паром, сравните имеющееся тепло с теплом, необходимым для полного плавления или конденсации.</li>
+<li>Если надо учесть калориметр, добавьте слагаемое C<sub>к</sub>·(θ − t<sub>к</sub>).</li>
+</ul>
+</section>
+
+<section class="card" id="s12">
+<h2>12. Тепловые двигатели и цикл Карно</h2>
+<div class="lv"><i>10 класс</i><i class="b">11 класс</i></div>
+<div class="f"><span class="f-body">η = <span class="frac"><span class="num">A</span><span class="den">Q₁</span></span> = <span class="frac"><span class="num">Q₁ − Q₂</span><span class="den">Q₁</span></span> = 1 − <span class="frac"><span class="num">Q₂</span><span class="den">Q₁</span></span></span><small>КПД теплового двигателя</small></div>
+<div class="f"><span class="f-body">η<sub>max</sub> = <span class="frac"><span class="num">T₁ − T₂</span><span class="den">T₁</span></span> = 1 − <span class="frac"><span class="num">T₂</span><span class="den">T₁</span></span></span><small>КПД цикла Карно</small></div>
+
+<h3>График цикла Карно</h3>
+<div class="gp">
+  <div class="gt" style="color:#ff8a5c">Цикл Карно в координатах p–V</div>
+  <div class="gx single">
+    <figure>
+      <svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Цикл Карно в координатах p–V" style="width:100%;height:auto;display:block">
+        <defs>
+          <marker id="mc1" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ff8a5c"/></marker>
+          <marker id="mc2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3fd6d3"/></marker>
+          <marker id="mc3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ffcb3d"/></marker>
+          <marker id="mc4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#aaa0ff"/></marker>
+        </defs>
+        <!-- Оси -->
+        <g stroke="#a3a9d0" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M36,150 V16"/><path d="M36,150 H220"/></g>
+        <g fill="#a3a9d0"><path d="M36,10 l-4,9 h8 z"/><path d="M226,150 l-9,-4 v8 z"/></g>
+        <text x="28" y="18" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15" text-anchor="end">p</text>
+        <text x="224" y="168" fill="#eceefc" font-family="Georgia,serif" font-style="italic" font-weight="600" font-size="15">V</text>
+        <text x="30" y="164" fill="#a3a9d0" font-family="Arial,sans-serif" font-size="11" text-anchor="end">0</text>
+
+        <!-- Заливка цикла (работа A) -->
+        <path d="M 68,32 Q 100,42 128,58 Q 155,95 180,126 Q 135,118 102,104 Q 82,68 68,32 Z" fill="rgba(255,138,92,0.18)" stroke="none"/>
+
+        <!-- Участки цикла Карно -->
+        <!-- 1->2 Изотерма T1 -->
+        <path d="M 68,32 Q 100,42 128,58" fill="none" stroke="#ff8a5c" stroke-width="3" marker-end="url(#mc1)"/>
+        <!-- 2->3 Адиабата -->
+        <path d="M 128,58 Q 155,95 180,126" fill="none" stroke="#3fd6d3" stroke-width="3" marker-end="url(#mc2)"/>
+        <!-- 3->4 Изотерма T2 -->
+        <path d="M 180,126 Q 135,118 102,104" fill="none" stroke="#ffcb3d" stroke-width="3" marker-end="url(#mc3)"/>
+        <!-- 4->1 Адиабата -->
+        <path d="M 102,104 Q 82,68 68,32" fill="none" stroke="#aaa0ff" stroke-width="3" marker-end="url(#mc4)"/>
+
+        <!-- Точки состояний -->
+        <circle cx="68" cy="32" r="4" fill="#ff8a5c" stroke="#0b0e24" stroke-width="1.5"/>
+        <text x="62" y="24" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="13">1</text>
+
+        <circle cx="128" cy="58" r="4" fill="#ff8a5c" stroke="#0b0e24" stroke-width="1.5"/>
+        <text x="136" y="54" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="13">2</text>
+
+        <circle cx="180" cy="126" r="4" fill="#ffcb3d" stroke="#0b0e24" stroke-width="1.5"/>
+        <text x="190" y="132" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="13">3</text>
+
+        <circle cx="102" cy="104" r="4" fill="#ffcb3d" stroke="#0b0e24" stroke-width="1.5"/>
+        <text x="92" y="116" fill="#eceefc" font-family="Georgia,serif" font-weight="700" font-size="13">4</text>
+
+        <!-- Подписи -->
+        <text x="115" y="85" fill="#ff8a5c" font-family="Manrope,sans-serif" font-weight="800" font-size="14" text-anchor="middle">A</text>
+        <text x="96" y="38" fill="#ff8a5c" font-family="Manrope,sans-serif" font-size="10">Q₁ (T₁)</text>
+        <text x="148" y="125" fill="#ffcb3d" font-family="Manrope,sans-serif" font-size="10">Q₂ (T₂)</text>
+      </svg>
+      <figcaption>Цикл Карно: 1–2 расширение (T₁), 2–3 адиабата, 3–4 сжатие (T₂), 4–1 адиабата</figcaption>
+    </figure>
+  </div>
+</div>
+
+<ul>
+<li>Q₁ — тепло, полученное от нагревателя, Q₂ — тепло, отданное холодильнику, A = Q₁ − Q₂ — полезная работа за цикл.</li>
+<li>T₁ и T₂ — температуры нагревателя и холодильника в кельвинах. КПД всегда меньше 100%, и ни один реальный двигатель не превзойдёт η<sub>max</sub>.</li>
+<li>Цикл Карно состоит из двух изотерм и двух адиабат.</li>
+<li>Для холодильной машины холодильный коэффициент: ε = <span class="frac"><span class="num">Q₂</span><span class="den">A</span></span>, где Q₂ — тепло, отнятое у охлаждаемого тела.</li>
+</ul>
+<div class="note"><b>Как считать КПД цикла на графике p–V.</b> Работа A равна площади цикла. Q₁ — это сумма тепла на тех участках, где газ его получает (проверяйте по знакам ΔU и A). Затем η = A / Q₁.</div>
+</section>
+
+<section class="card" id="s13">
+<h2>13. Поверхностное натяжение и капиллярные явления</h2>
+<div class="lv"><i>10 класс</i><i class="b">11 класс</i></div>
+<div class="f"><span class="f-body">σ = <span class="frac"><span class="num">F</span><span class="den">l</span></span></span><small>коэффициент поверхностного натяжения, Н/м</small></div>
+<div class="f"><span class="f-body">F = σ·l</span><small>сила поверхностного натяжения</small></div>
+<div class="f"><span class="f-body">E<sub>п</sub> = σ·S &nbsp;⇒&nbsp; A = σ·ΔS</span><small>поверхностная энергия и работа</small></div>
+<ul>
+<li>Если плёнка имеет две поверхности (мыльная плёнка на рамке), то длина контура удваивается: F = 2σl.</li>
+<li>У воды при 20 °C σ ≈ 0,072 Н/м. С ростом температуры σ уменьшается.</li>
+<li>Жидкость стремится принять форму с наименьшей площадью поверхности: капли и пузыри шарообразны.</li>
+</ul>
+<h3>Давление под изогнутой поверхностью (повышенный уровень)</h3>
+<div class="f"><span class="f-body">Δp = <span class="frac"><span class="num">2σ</span><span class="den">R</span></span></span><small>капля или пузырёк в жидкости</small></div>
+<div class="f"><span class="f-body">Δp = <span class="frac"><span class="num">4σ</span><span class="den">R</span></span></span><small>мыльный пузырь (две поверхности)</small></div>
+<h3>Смачивание и капилляры</h3>
+<div class="f"><span class="f-body">h = <span class="frac"><span class="num">2σ·cosθ</span><span class="den">ρ·g·r</span></span></span><small>высота подъёма жидкости в капилляре</small></div>
+<ul>
+<li>Смачивающая жидкость (θ &lt; 90°) поднимается в капилляре, несмачивающая (θ &gt; 90°) опускается. При полном смачивании cosθ = 1.</li>
+<li>Высота подъёма обратно пропорциональна радиусу капилляра.</li>
+</ul>
+</section>
+
+<section class="card" id="s14">
+<h2>14. Твёрдые тела: упругость и тепловое расширение</h2>
+<div class="lv"><i>10 класс</i><i class="b">11 класс</i></div>
+<ul>
+<li><b>Кристаллы</b> имеют строгий порядок в расположении частиц (кристаллическую решётку) и определённую температуру плавления. <b>Аморфные тела</b> такого порядка не имеют и размягчаются в интервале температур.</li>
+<li>Монокристаллы анизотропны: свойства зависят от направления. Поликристаллы и аморфные тела изотропны.</li>
+</ul>
+<h3>Деформация растяжения</h3>
+<div class="f"><span class="f-body">σ<sub>мех</sub> = <span class="frac"><span class="num">F</span><span class="den">S</span></span></span><small>механическое напряжение, Па</small></div>
+<div class="f"><span class="f-body">ε = <span class="frac"><span class="num">Δl</span><span class="den">l₀</span></span></span><small>относительное удлинение</small></div>
+<div class="f"><span class="f-body">σ<sub>мех</sub> = E·|ε|</span><small>закон Гука, E — модуль Юнга, Па</small></div>
+<div class="f"><span class="f-body">F = k·Δl, &nbsp; k = <span class="frac"><span class="num">E·S</span><span class="den">l₀</span></span></span><small>жёсткость образца</small></div>
+<div class="f"><span class="f-body">E<sub>п</sub> = <span class="frac"><span class="num">k·(Δl)²</span><span class="den">2</span></span></span><small>энергия упругой деформации</small></div>
+<h3>Тепловое расширение</h3>
+<div class="f"><span class="f-body">l = l₀·(1 + α·ΔT)</span><small>линейное расширение</small></div>
+<div class="f"><span class="f-body">V = V₀·(1 + β·ΔT), &nbsp; β ≈ 3α</span><small>объёмное расширение</small></div>
+<div class="note">Вода при нагревании от 0 до 4 °C сжимается, а выше 4 °C расширяется. Плотность воды максимальна при 4 °C.</div>
+</section>
+
+<section class="card" id="s15">
+<h2>15. Константы и единицы измерения</h2>
+<div class="lv"><i>10 класс</i><i class="b">11 класс</i></div>
+<div class="tw"><table>
+<tr><th>Величина</th><th>Значение</th></tr>
+<tr><td>Постоянная Авогадро N<sub>A</sub></td><td>6,02·10²³ моль⁻¹</td></tr>
+<tr><td>Постоянная Больцмана k</td><td>1,38·10⁻²³ Дж/К</td></tr>
+<tr><td>Универсальная газовая постоянная R</td><td>8,31 Дж/(моль·К)</td></tr>
+<tr><td>Нормальные условия</td><td>101 325 Па, 273 К; V<sub>m</sub> = 22,4·10⁻³ м³/моль</td></tr>
+<tr><td>Атмосферное давление p₀</td><td>≈ 10⁵ Па (101 325 Па)</td></tr>
+<tr><td>Ускорение свободного падения g</td><td>9,8 м/с² (в задачах часто 10 м/с²)</td></tr>
+<tr><td>Удельная теплоёмкость воды / льда</td><td>4200 / 2100 Дж/(кг·К)</td></tr>
+<tr><td>Удельная теплота плавления льда λ</td><td>3,3·10⁵ Дж/кг</td></tr>
+<tr><td>Удельная теплота парообразования воды L</td><td>2,3·10⁶ Дж/кг</td></tr>
+<tr><td>Плотность воды / ртути</td><td>1000 / 13 600 кг/м³</td></tr>
+<tr><td>Молярная масса H₂, He, N₂, O₂, CO₂, H₂O, воздуха</td><td>2, 4, 28, 32, 44, 18, 29 (·10⁻³ кг/моль)</td></tr>
+</table></div>
+<h3>Перевод единиц в СИ</h3>
+<div class="tw"><table>
+<tr><th>Было</th><th>Стало</th></tr>
+<tr><td>1 л</td><td>10⁻³ м³ (1 мл = 1 см³ = 10⁻⁶ м³)</td></tr>
+<tr><td>1 г</td><td>10⁻³ кг</td></tr>
+<tr><td>1 кПа, 1 МПа</td><td>10³ Па, 10⁶ Па</td></tr>
+<tr><td>1 атм</td><td>101 325 Па</td></tr>
+<tr><td>1 мм рт. ст.</td><td>≈ 133,3 Па</td></tr>
+<tr><td>t, °C</td><td>T = t + 273, К</td></tr>
+<tr><td>1 кал / 1 ккал</td><td>≈ 4,19 Дж / 4190 Дж</td></tr>
+</table></div>
+</section>
+
+<section class="card" id="s16">
+<h2>16. Как решать задачи и типичные ошибки</h2>
+<div class="lv"><i>10 класс</i><i class="b">11 класс</i></div>
+<h3>Алгоритм</h3>
+<ul>
+<li>Запишите «Дано» и переведите все величины в СИ. Температуру переведите в кельвины.</li>
+<li>Определите объект (какой газ, сколько его) и процесс: что постоянно — масса, температура, давление или объём.</li>
+<li>Выберите закон: уравнение Менделеева — Клапейрона, изопроцесс, первый закон термодинамики, тепловой баланс.</li>
+<li>Если газ в двух состояниях, запишите закон для обоих и поделите уравнения.</li>
+<li>Выразите неизвестное буквами, потом подставляйте числа.</li>
+<li>Проверьте размерность и здравый смысл: давление положительно, температура в кельвинах не ниже нуля, КПД меньше 1.</li>
+</ul>
+<h3>Типичные ошибки</h3>
+<ul>
+<li>Подстановка температуры в градусах Цельсия в газовые законы.</li>
+<li>Забытый перевод литров в кубометры, граммов в килограммы, килопаскалей в паскали.</li>
+<li>Путаница между массой молекулы m₀ и молярной массой M.</li>
+<li>Расчёт работы по формуле A = pΔV при непостоянном давлении. В этом случае нужна площадь под графиком.</li>
+<li>Неверные знаки в Q = ΔU + A: проверьте, расширяется газ или сжимается, нагревается или охлаждается.</li>
+<li>В задачах с жидкостью и поршнем не учтено атмосферное давление.</li>
+<li>Применение закона Менделеева — Клапейрона к насыщенному пару при изменении объёма.</li>
+</ul>
+</section>
+
+      <div class="card empty" id="none" hidden>Ничего не найдено. Попробуйте другое слово.</div>
+    </main>
+  </div>
+</div>
+<footer>© Кинаш И. А. Все права защищены.</footer>
+
+<script>
+(function(){
+  var secs = Array.prototype.slice.call(document.querySelectorAll('main .card[id^=s]'));
+  var toc = document.getElementById('toc');
+  secs.forEach(function(s){
+    var a = document.createElement('a');
+    a.href = '#' + s.id;
+    a.textContent = s.querySelector('h2').textContent;
+    a.setAttribute('data-id', s.id);
+    toc.appendChild(a);
+  });
+  var links = toc.querySelectorAll('a');
+  function mark(id){
+    Array.prototype.forEach.call(links, function(a){
+      a.classList.toggle('on', a.getAttribute('data-id') === id);
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) mark(e.target.id); });
+    }, {rootMargin: '-15% 0px -70% 0px'});
+    secs.forEach(function(s){ io.observe(s); });
+  }
+  var q = document.getElementById('q'), none = document.getElementById('none');
+  q.addEventListener('input', function(){
+    var v = q.value.trim().toLowerCase(), shown = 0;
+    secs.forEach(function(s){
+      var ok = !v || s.textContent.toLowerCase().indexOf(v) !== -1;
+      s.hidden = !ok;
+      var a = toc.querySelector('[data-id=' + s.id + ']');
+      if (a) a.hidden = !ok;
+      if (ok) shown++;
+    });
+    none.hidden = shown !== 0;
+  });
+})();
+</script>
+</body>
+</html>

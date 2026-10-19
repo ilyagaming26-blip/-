@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Тест: идеальный газ и уравнение Менделеева — Клапейрона</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&family=Newsreader:ital,wght@0,500;1,500;1,600&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --ink:#eceefc; --muted:#a3a9d0; --line:rgba(255,255,255,.14);
+  --cM:#3fd6d3; --cT:#ff8a5c; --cV:#aaa0ff; --cP:#ffcb3d;
+  --bg:#0b0e24; --glass:rgba(26,30,70,.62); --glass-bd:rgba(255,255,255,.1);
+  --shadow:0 24px 60px -30px rgba(0,0,0,.8);
+  --soft:rgba(255,255,255,.16); --soft2:rgba(255,255,255,.09); --surface:rgba(255,255,255,.07); --surface-hover:rgba(255,255,255,.15);
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  --sans:'Manrope',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{
+  margin:0;color:var(--ink);font:16px/1.55 var(--sans);min-height:100vh;
+  background:
+    radial-gradient(900px 520px at 8% -8%,rgba(109,94,240,.32) 0,transparent 60%),
+    radial-gradient(800px 520px at 100% 8%,rgba(20,184,181,.18) 0,transparent 60%),
+    radial-gradient(700px 500px at 60% 105%,rgba(240,98,45,.14) 0,transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+}
+.wrap{max-width:780px;margin:0 auto;padding:24px 22px 64px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.btn{display:inline-block;text-decoration:none;font:600 .92rem var(--sans);cursor:pointer;padding:9px 16px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:background .15s,transform .15s}
+.btn:hover{background:var(--surface-hover);transform:translateY(-1px)}
+.btn:focus-visible,.opt:focus-visible,a:focus-visible{outline:3px solid var(--cV);outline-offset:2px}
+.btn.primary{background:var(--cV);color:#10123a;border-color:transparent}
+.btn.primary:hover{background:#c0b8ff}
+h1{font:800 clamp(1.8rem,5vw,2.8rem)/1.08 var(--sans);letter-spacing:-.03em;margin:0 0 10px}
+.lead{color:var(--muted);margin:0 0 24px;max-width:58ch}
+.lead a,.fb a{color:var(--cV);font-weight:600}
+.card{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--glass-bd);border-radius:28px;padding:28px;box-shadow:var(--shadow)}
+.prog{display:flex;justify-content:space-between;color:var(--muted);font-size:.92rem;margin-bottom:8px}
+.pbar{height:8px;border-radius:99px;background:var(--soft);overflow:hidden;margin-bottom:24px}
+.pbar b{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#14b8b5,#6d5ef0);transition:width .3s}
+.q{font:600 clamp(1.25rem,3vw,1.6rem)/1.35 var(--serif);margin:0 0 20px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:14px;align-items:center;text-align:left;width:100%;font:500 1.02rem/1.4 var(--sans);color:var(--ink);padding:14px 16px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;transition:background .15s,border-color .15s,transform .15s}
+.opt:hover:not(:disabled){background:var(--surface-hover);transform:translateX(3px)}
+.opt:disabled{cursor:default;color:var(--ink)}
+.opt .k{flex:none;width:28px;height:28px;border-radius:9px;background:var(--soft2);display:grid;place-items:center;font:600 .95rem var(--serif)}
+.opt.ok{background:rgba(20,184,181,.2);border-color:var(--cM)}
+.opt.bad{background:rgba(240,98,45,.2);border-color:var(--cT)}
+.opt.dim{opacity:.55}
+.fb{margin-top:20px;padding:16px 18px;border-radius:16px;background:var(--soft2);border-left:4px solid var(--cV)}
+.fb.ok{border-color:var(--cM)} .fb.bad{border-color:var(--cT)}
+.fb strong{display:block;margin-bottom:4px}
+.fb p{margin:0 0 6px;color:var(--ink)}
+.next{margin-top:18px;display:flex;justify-content:flex-end}
+.score{font:600 clamp(3rem,10vw,5rem)/1 var(--serif);margin:6px 0 4px}
+.verdict{font-weight:800;font-size:1.2rem;margin:0 0 8px}
+.review{margin:22px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.review li{padding:14px 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.review small{display:block;color:var(--muted)}
+.review b{color:var(--cM)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+[hidden]{display:none!important}
+@media(max-width:520px){.card{padding:20px;border-radius:22px}}
+footer{margin-top:20px;padding:22px;text-align:center;color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="btn" href="mkt.html">← К модели газа</a>
+    <a class="btn" href="spravochnik.html">Справочник</a>
+    <span class="hint" style="color:var(--muted);font-size:.9rem">13 вопросов</span>
+  </div>
+  <h1>Проверьте себя: идеальный газ</h1>
+  <p class="lead">Вопросы по уравнению Менделеева — Клапейрона, газовым законам и основам МКТ. Если что-то непонятно, проверьте ответ в <a href="mkt.html">интерактивной модели</a> или найдите правило в <a href="spravochnik.html">справочнике</a>. Для расчётов принято R = 8,31 Дж/(моль·К).</p>
+
+  <section class="card" id="quiz">
+    <div class="prog"><span id="num"></span><span id="sc"></span></div>
+    <div class="pbar"><b id="pb"></b></div>
+    <h2 class="q" id="q"></h2>
+    <div class="opts" id="opts" role="group" aria-label="Варианты ответа"></div>
+    <div class="fb" id="fb" hidden role="status"></div>
+    <div class="next"><button type="button" class="btn primary" id="next" hidden></button></div>
+  </section>
+
+  <section class="card" id="result" hidden>
+    <div class="verdict" id="verdict"></div>
+    <div class="score" id="score"></div>
+    <p class="lead" id="rmsg" style="margin:0"></p>
+    <ul class="review" id="review"></ul>
+    <div class="actions">
+      <button type="button" class="btn primary" id="again">Пройти ещё раз</button>
+      <a class="btn" href="mkt.html">Вернуться к модели</a>
+    </div>
+  </section>
+</div>
+<footer>© Кинаш И. А. Все права защищены.</footer>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  // o[0] — всегда правильный ответ; порядок вариантов перемешивается при показе
+  var BANK = [
+    {q:'Какая запись верно выражает уравнение Менделеева — Клапейрона?',
+     o:['pV = (m/M)·R·T','pV = m·R·T','p = (m/M)·R·V·T','p·T = (m/M)·R·V'],
+     e:'Произведение давления и объёма равно количеству вещества ν = m/M, умноженному на газовую постоянную R и абсолютную температуру T.', m:true},
+    {q:'Чему равно количество вещества в 56 г азота N₂ (M = 28 г/моль)?',
+     o:['2 моль','0,5 моль','8 моль','28 моль'],
+     e:'ν = m/M = 56 г / 28 г/моль = 2 моль.'},
+    {q:'Температура газа 27 °C. Чему она равна по шкале Кельвина?',
+     o:['300 К','246 К','27 К','327 К'],
+     e:'T = t + 273 = 27 + 273 = 300 К. В формулах всегда используется абсолютная температура.'},
+    {q:'Масса и температура газа постоянны (изотермический процесс). Объём уменьшили в 2 раза. Как изменилось давление?',
+     o:['Увеличилось в 2 раза','Уменьшилось в 2 раза','Увеличилось в 4 раза','Не изменилось'],
+     e:'При T = const и m = const произведение pV постоянно (закон Бойля — Мариотта), поэтому давление и объём обратно пропорциональны.', m:true},
+    {q:'Газ при постоянном давлении имел объём 6 л и температуру 300 К. Какой объём он займёт при 450 К?',
+     o:['9 л','4 л','12 л','3 л'],
+     e:'При p = const отношение V/T постоянно: V₂ = V₁·T₂/T₁ = 6 · 450 / 300 = 9 л.', m:true},
+    {q:'Давление газа при постоянном объёме равно 100 кПа при 250 К. Каким оно станет при 500 К?',
+     o:['200 кПа','50 кПа','150 кПа','400 кПа'],
+     e:'При V = const отношение p/T постоянно: p₂ = p₁·T₂/T₁ = 100 · 500 / 250 = 200 кПа.', m:true},
+    {q:'Найдите давление 2 моль идеального газа при температуре 300 К в сосуде объёмом 10 л.',
+     o:['≈ 499 кПа','≈ 250 кПа','≈ 50 кПа','≈ 4,99 кПа'],
+     e:'p = νRT/V = 2 · 8,31 · 300 / 0,010 м³ ≈ 4,99·10⁵ Па ≈ 499 кПа. Не забудьте перевести литры в кубометры.', m:true},
+    {q:'От чего зависит средняя кинетическая энергия поступательного движения молекул идеального газа?',
+     o:['Только от абсолютной температуры','От температуры и массы молекулы','Только от давления','От объёма и рода газа'],
+     e:'Средняя энергия E = (3/2)kT зависит только от абсолютной температуры.'},
+    {q:'Абсолютную температуру газа увеличили в 4 раза. Как изменилась среднеквадратичная скорость молекул?',
+     o:['Увеличилась в 2 раза','Увеличилась в 4 раза','Увеличилась в 16 раз','Не изменилась'],
+     e:'v = √(3RT/M), то есть скорость пропорциональна √T. При росте T в 4 раза скорость растёт в √4 = 2 раза.', m:true},
+    {q:'Какой из газов при одной и той же температуре имеет наибольшую среднеквадратичную скорость молекул?',
+     o:['Водород H₂','Гелий He','Азот N₂','Углекислый газ CO₂'],
+     e:'v = √(3RT/M): чем меньше молярная масса, тем больше скорость. Наименьшая молярная масса у водорода (около 2 г/моль).', m:true}
+  ];
+  BANK.push({q:'Какой объём занимает 1 моль идеального газа при нормальных условиях (0 °C, 101,3 кПа)?',
+     o:['≈ 22,4 л','≈ 2,24 л','≈ 224 л','≈ 1 л'],
+     e:'V = νRT/p = 1 · 8,31 · 273 / 101 300 ≈ 0,0224 м³ = 22,4 л.', m:true});
+
+  BANK.push({q:'Какой процесс называют адиабатным?',
+     o:['Процесс без теплообмена с окружающей средой (Q = 0)','Процесс при постоянной температуре','Процесс при постоянном давлении','Процесс при постоянном объёме'],
+     e:'Адиабатный процесс идёт без теплообмена: Q = 0. Постоянная температура — изотермический процесс, постоянное давление — изобарный, постоянный объём — изохорный.'});
+  BANK.push({q:'Газ быстро сжали в теплоизолированном цилиндре. Что произошло с его температурой?',
+     o:['Повысилась: работа внешних сил увеличила внутреннюю энергию','Понизилась: газ отдал тепло стенкам','Не изменилась: теплообмена нет','Для ответа не хватает данных'],
+     e:'При адиабатном сжатии Q = 0, поэтому ΔU = A′ > 0: внутренняя энергия, а вместе с ней и температура, растут.', m:true});
+  BANK.push({q:'Одноатомный газ при адиабатном расширении совершил работу 300 Дж. Как изменилась его внутренняя энергия?',
+     o:['Уменьшилась на 300 Дж','Увеличилась на 300 Дж','Не изменилась','Увеличилась на 150 Дж'],
+     e:'По первому закону Q = ΔU + A при Q = 0 получаем ΔU = −A = −300 Дж. Газ расходует внутреннюю энергию и охлаждается.', m:true});
+
+  var order, idx, score, wrong, answered, cur;
+  function shuffle(a){
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function start(){
+    order = shuffle(BANK.map(function(_, i){ return i; }));
+    idx = 0; score = 0; wrong = [];
+    $('result').hidden = true; $('quiz').hidden = false;
+    show();
+  }
+  function show(){
+    answered = false;
+    var item = BANK[order[idx]];
+    cur = {item: item, opts: shuffle(item.o.map(function(t, i){ return {t: t, ok: i === 0}; }))};
+    $('num').textContent = 'Вопрос ' + (idx + 1) + ' из ' + BANK.length;
+    $('sc').textContent = 'Верно: ' + score;
+    $('pb').style.width = (idx / BANK.length * 100) + '%';
+    $('q').textContent = item.q;
+    var box = $('opts'); box.innerHTML = '';
+    cur.opts.forEach(function(o, i){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt';
+      var k = document.createElement('span'); k.className = 'k'; k.textContent = i + 1;
+      var t = document.createElement('span'); t.textContent = o.t;
+      b.appendChild(k); b.appendChild(t);
+      b.addEventListener('click', function(){ choose(i); });
+      box.appendChild(b);
+    });
+    $('fb').hidden = true; $('next').hidden = true;
+  }
+  function choose(i){
+    if (answered) return;
+    answered = true;
+    var picked = cur.opts[i], good = picked.ok, item = cur.item;
+    var btns = $('opts').children;
+    cur.opts.forEach(function(o, j){
+      btns[j].disabled = true;
+      if (o.ok) btns[j].classList.add('ok');
+      else if (j === i) btns[j].classList.add('bad');
+      else btns[j].classList.add('dim');
+    });
+    if (good) score++; else wrong.push({q: item.q, mine: picked.t, right: item.o[0], e: item.e});
+    $('sc').textContent = 'Верно: ' + score;
+    var fb = $('fb'); fb.className = 'fb ' + (good ? 'ok' : 'bad'); fb.innerHTML = '';
+    var st = document.createElement('strong'); st.textContent = good ? 'Верно!' : 'Неверно. Правильный ответ: ' + item.o[0];
+    var p = document.createElement('p'); p.textContent = item.e;
+    fb.appendChild(st); fb.appendChild(p);
+    if (item.m) {
+      var a = document.createElement('a'); a.href = 'mkt.html'; a.textContent = 'Проверить в модели';
+      fb.appendChild(a);
+    }
+    fb.hidden = false;
+    var nb = $('next'); nb.textContent = (idx === BANK.length - 1) ? 'Показать результат' : 'Дальше'; nb.hidden = false; nb.focus();
+  }
+  function finish(){
+    $('pb').style.width = '100%';
+    $('quiz').hidden = true; $('result').hidden = false;
+    var n = BANK.length, pc = score / n;
+    $('score').textContent = score + ' / ' + n;
+    $('verdict').textContent = pc >= 0.9 ? 'Отличный результат' : pc >= 0.7 ? 'Хороший результат' : pc >= 0.5 ? 'Неплохо, но есть что повторить' : 'Стоит повторить тему';
+    $('rmsg').textContent = wrong.length
+      ? 'Ниже разобраны вопросы, в которых были ошибки. Попробуйте воспроизвести эти случаи в модели.'
+      : 'Ошибок нет. Можно проверить себя ещё раз или поэкспериментировать с моделью.';
+    var ul = $('review'); ul.innerHTML = '';
+    wrong.forEach(function(w){
+      var li = document.createElement('li');
+      var q = document.createElement('strong'); q.textContent = w.q;
+      var a = document.createElement('small'); a.textContent = 'Ваш ответ: ' + w.mine;
+      var r = document.createElement('small'); r.innerHTML = 'Правильно: <b></b>'; r.lastChild.textContent = w.right;
+      var e = document.createElement('small'); e.textContent = w.e;
+      li.appendChild(q); li.appendChild(a); li.appendChild(r); li.appendChild(e);
+      ul.appendChild(li);
+    });
+    $('result').scrollIntoView({behavior: 'smooth', block: 'start'});
+  }
+  $('next').addEventListener('click', function(){
+    if (idx === BANK.length - 1) { finish(); } else { idx++; show(); }
+  });
+  $('again').addEventListener('click', function(){ start(); window.scrollTo(0, 0); });
+  document.addEventListener('keydown', function(ev){
+    if (answered || $('quiz').hidden) return;
+    var n = parseInt(ev.key, 10);
+    if (n >= 1 && n <= cur.opts.length) choose(n - 1);
+  });
+  start();
+})();
+</script>
+</body>
+</html>

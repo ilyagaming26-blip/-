@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Идеальный газ: уравнение Менделеева — Клапейрона</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&family=Newsreader:ital,wght@0,500;1,500;1,600&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --ink:#eceefc; --muted:#a3a9d0; --line:rgba(255,255,255,.14);
+  --cM:#3fd6d3; --cT:#ff8a5c; --cV:#aaa0ff; --cP:#ffcb3d;
+  --fM:#14b8b5; --fT:#f0622d; --fV:#6d5ef0; --fP:#f0b400;
+  --bg:#0b0e24; --g1:rgba(109,94,240,.32); --g2:rgba(20,184,181,.18); --g3:rgba(240,98,45,.14);
+  --glass:rgba(26,30,70,.62); --glass-bd:rgba(255,255,255,.1); --shadow:0 24px 60px -30px rgba(0,0,0,.8);
+  --chipP:rgba(240,180,0,.16); --chipV:rgba(109,94,240,.26); --chipT:rgba(240,98,45,.2); --chipM:rgba(20,184,181,.2); --chipS:rgba(255,255,255,.1);
+  --soft:rgba(255,255,255,.16); --soft2:rgba(255,255,255,.09); --surface:rgba(255,255,255,.07); --surface-hover:rgba(255,255,255,.15); --surface-on:rgba(255,255,255,.17);
+  --accent-soft:rgba(140,125,255,.2); --ring:#141842; --ring-shadow:rgba(0,0,0,.6);
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  --sans:'Manrope',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{
+  margin:0;color:var(--ink);font:16px/1.55 var(--sans);min-height:100vh;
+  background:
+    radial-gradient(900px 520px at 8% -8%,var(--g1) 0,transparent 60%),
+    radial-gradient(800px 520px at 100% 8%,var(--g2) 0,transparent 60%),
+    radial-gradient(700px 500px at 60% 105%,var(--g3) 0,transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:24px 22px 64px}
+.topbar{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+header{margin-bottom:28px;max-width:720px}
+h1{font:800 clamp(2rem,5vw,3.2rem)/1.05 var(--sans);letter-spacing:-.03em;margin:0 0 12px}
+header p{margin:0;color:var(--muted);font-size:1.05rem;max-width:56ch}
+
+.cp{color:var(--cP)}.cV{color:var(--cV)}.cT{color:var(--cT)}.cM{color:var(--cM)}
+/* формула */
+.law{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px 16px;
+  padding:30px 20px;margin-bottom:8px;border-radius:28px;
+  background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--glass-bd);box-shadow:var(--shadow);
+}
+.law .op{font:500 clamp(1.6rem,4vw,2.6rem)/1 var(--serif);color:var(--muted)}
+.chip{
+  font:italic 600 clamp(1.9rem,5vw,3.1rem)/1 var(--serif);
+  min-width:1.7em;padding:.28em .45em .32em;border-radius:20px;border:2px solid transparent;
+  cursor:pointer;transition:transform .15s,background .15s,color .15s,box-shadow .15s;
+}
+.chip.static{cursor:default}
+.chip[data-u=p]{background:var(--chipP);color:var(--cP)}
+.chip[data-u=V]{background:var(--chipV);color:var(--cV)}
+.chip[data-u=T]{background:var(--chipT);color:var(--cT)}
+.chip[data-u=m]{background:var(--chipM);color:var(--cM)}
+.chip.static{background:var(--chipS);color:var(--ink)}
+.chip.mm{background:var(--chipM);color:var(--cM)}
+button.chip:hover{transform:translateY(-3px)}
+button.chip:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.chip.unk{color:#fff;box-shadow:0 14px 28px -10px currentColor;position:relative}
+.chip[data-u=p].unk{background:var(--fP);color:#2b1f00;box-shadow:0 14px 28px -10px var(--fP)}
+.chip[data-u=V].unk{background:var(--fV);box-shadow:0 14px 28px -10px var(--fV)}
+.chip[data-u=T].unk{background:var(--fT);box-shadow:0 14px 28px -10px var(--fT)}
+.chip[data-u=m].unk{background:var(--fM);color:#04302f;box-shadow:0 14px 28px -10px var(--fM)}
+.frac{display:inline-flex;flex-direction:column;align-items:center;gap:6px}
+.frac .chip{font-size:clamp(1.3rem,3.2vw,2rem);padding:.2em .4em .24em;border-radius:16px}
+.frac .rule{height:3px;width:100%;background:var(--ink);border-radius:2px}
+.caption{text-align:center;color:var(--muted);font-size:.92rem;margin:12px 0 26px}
+
+/* карточки */
+.main{display:grid;grid-template-columns:1.2fr 1fr;gap:22px;align-items:start}
+@media(max-width:880px){.main{grid-template-columns:1fr}}
+.card{
+  background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--glass-bd);border-radius:28px;padding:24px;
+  box-shadow:var(--shadow);
+}
+.card h2{font:800 1.15rem/1.3 var(--sans);letter-spacing:-.01em;margin:0 0 16px}
+.card-header-row {display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;}
+.card-header-row h2 {margin: 0;}
+
+/* камера и график */
+canvas{box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+canvas{
+  display:block;width:100%;height:320px;border-radius:20px;
+  background:radial-gradient(120% 120% at 20% 10%,#2b3280 0,#141a45 55%,#0d1233 100%);
+}
+.chart-box{margin-top:16px}
+.chart-box canvas{height:160px;background:#0f1435}
+.gauge{margin-top:14px}
+.gauge .bar{height:12px;border-radius:99px;background:var(--soft);overflow:hidden}
+.gauge .bar b{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#14b8b5,#f0b400,#f0622d);transition:width .2s}
+.gauge .lbl{display:flex;justify-content:space-between;font-size:.92rem;color:var(--muted);margin-top:6px}
+.gauge .lbl span:last-child{color:var(--ink);font-weight:800}
+.tools{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:14px}
+
+/* управление */
+.find{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:5px;border-radius:18px;background:var(--soft2);margin-bottom:22px}
+.find label{position:relative;cursor:pointer}
+.find input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.find span{display:block;text-align:center;padding:8px 0 9px;border-radius:14px;font:italic 600 1.3rem/1 var(--serif);transition:background .15s,box-shadow .15s}
+.find input:checked+span{background:var(--surface-on);box-shadow:0 6px 16px -6px var(--ring-shadow)}
+.find input:focus-visible+span{outline:3px solid var(--cV);outline-offset:1px}
+.row{margin-bottom:20px}
+.row .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
+.row .name{font-weight:600;font-size:.95rem}
+.row .val{font:600 1.45rem/1 var(--serif);font-variant-numeric:tabular-nums}
+.row.calc .val::after{content:" вычислено";font:600 .72rem var(--sans);margin-left:8px;padding:3px 9px;border-radius:99px;background:var(--soft2);color:var(--muted);vertical-align:middle}
+.row.calc input[type=range]{opacity:.45}
+
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent;margin:0;cursor:pointer}
+input[type=range]:disabled{cursor:not-allowed}
+input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:99px;background:var(--soft)}
+input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:var(--soft)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;margin-top:-8px;border-radius:50%;background:var(--c);border:4px solid var(--ring);box-shadow:0 4px 12px -2px var(--ring-shadow)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--c);border:4px solid var(--ring);box-shadow:0 4px 12px -2px var(--ring-shadow)}
+input[type=range]:focus-visible{outline:none}
+input[type=range]:focus-visible::-webkit-slider-thumb{outline:3px solid var(--ink);outline-offset:2px}
+input[type=range]:focus-visible::-moz-range-thumb{outline:3px solid var(--ink);outline-offset:2px}
+select{font:inherit;font-weight:600;padding:11px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);width:100%}
+select:focus-visible{outline:3px solid var(--cV);outline-offset:1px}
+.hint{font-size:.9rem;color:var(--muted);margin:10px 0 0}
+.warn{color:var(--cT);font-size:.9rem;font-weight:600;margin:0 0 12px;min-height:1.4em}
+.laws{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.btn{display:inline-block;text-decoration:none;font:600 .92rem var(--sans);cursor:pointer;padding:9px 16px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:background .15s,transform .15s}
+.btn:hover{background:var(--surface-hover);transform:translateY(-1px)}
+.btn:focus-visible{outline:3px solid var(--cV);outline-offset:2px}
+
+/* динамическая подсказка закона */
+.law-hint-box{
+  margin-top:12px;padding:12px 16px;border-radius:14px;background:rgba(109,94,240,0.12);
+  border:1px solid rgba(109,94,240,0.3);font-size:.95rem;display:none;
+}
+.law-hint-box b{color:var(--cV)}
+
+/* расчёт */
+.sub{margin-top:22px}
+.eq{font:italic 500 1.25rem/1.8 var(--serif);overflow-x:auto;white-space:nowrap;padding-bottom:2px}
+.eq u{text-decoration:none;font:600 .98rem var(--sans);display:inline-block;margin-top:6px;padding:10px 16px;border-radius:14px;background:var(--accent-soft);color:var(--ink)}
+.derived{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:22px}
+.derived div{padding:16px 18px;border-radius:20px;background:var(--surface);border:1px solid var(--line)}
+.derived small{display:block;color:var(--muted);font-size:.82rem;line-height:1.35;min-height:2.2em}
+.derived strong{display:block;margin-top:6px;font:600 1.5rem/1.1 var(--serif);font-variant-numeric:tabular-nums}
+@media(max-width:520px){.card{padding:18px;border-radius:22px}.law{padding:22px 12px}}
+.btn.on{background:var(--cV);color:#10123a;border-color:transparent}
+footer{margin-top:20px;padding:22px;text-align:center;color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="btn" href="spravochnik.html">Справочник</a>
+    <a class="btn" href="test.html">Пройти тест по теме</a>
+  </div>
+  <header>
+    <h1>Идеальный газ в одном уравнении</h1>
+    <p>Выберите величину, которую нужно найти, и меняйте остальные. Все параметры связаны уравнением Менделеева — Клапейрона, а в камере и на графике видно, как меняется состояние газа.</p>
+  </header>
+
+  <div class="law" role="group" aria-label="Уравнение pV = (m/M)RT. Нажмите на величину, чтобы найти её">
+    <button type="button" class="chip" data-u="p" aria-label="Найти давление p">p</button>
+    <span class="op">·</span>
+    <button type="button" class="chip" data-u="V" aria-label="Найти объём V">V</button>
+    <span class="op">=</span>
+    <span class="frac">
+      <button type="button" class="chip" data-u="m" aria-label="Найти массу m">m</button>
+      <span class="rule"></span>
+      <span class="chip static mm" aria-label="молярная масса M">M</span>
+    </span>
+    <span class="op">·</span>
+    <span class="chip static" aria-label="газовая постоянная R">R</span>
+    <span class="op">·</span>
+    <button type="button" class="chip" data-u="T" aria-label="Найти температуру T">T</button>
+  </div>
+  <p class="caption">Нажмите на букву p, V, m или T, чтобы найти именно эту величину</p>
+
+  <div class="main">
+    <section class="card">
+      <h2>Камера с подвижным поршнем</h2>
+      <canvas id="cv" role="img" aria-label="Модель газа: молекулы движутся в камере с поршнем"></canvas>
+
+      <div class="chart-box">
+        <div class="lbl" style="font-size:0.85rem;color:var(--muted);margin-bottom:4px;">Живая p–V диаграмма состояния</div>
+        <canvas id="chartCv" role="img" aria-label="График p-V в реальном времени"></canvas>
+      </div>
+
+      <div class="gauge">
+        <div class="bar"><b id="gbar"></b></div>
+        <div class="lbl"><span>Давление</span><span id="gtxt"></span></div>
+      </div>
+      <div class="tools">
+        <p class="hint" style="margin:0">Число молекул условное. Цвет и скорость зависят от температуры, ширина камеры — от объёма.</p>
+        <button type="button" class="btn" id="pause">Остановить</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header-row">
+        <h2>Параметры</h2>
+        <a class="btn" href="#" id="btn-STP" style="background:rgba(20,184,181,0.2);border-color:var(--cM);padding:6px 12px;font-size:0.85rem;">Сброс к н. у.</a>
+      </div>
+
+      <div class="find" role="radiogroup" aria-label="Искомая величина">
+        <label><input type="radio" name="u" value="p" aria-label="найти давление p" checked><span class="cp">p</span></label>
+        <label><input type="radio" name="u" value="V" aria-label="найти объём V"><span class="cV">V</span></label>
+        <label><input type="radio" name="u" value="T" aria-label="найти температуру T"><span class="cT">T</span></label>
+        <label><input type="radio" name="u" value="m" aria-label="найти массу m"><span class="cM">m</span></label>
+      </div>
+
+      <div class="row">
+        <div class="top"><label class="name" for="gas">Газ</label><span class="val cM" id="oM"></span></div>
+        <select id="gas">
+          <option value="2.016">Водород H₂</option>
+          <option value="4.003">Гелий He</option>
+          <option value="28.01" selected>Азот N₂</option>
+          <option value="32.00">Кислород O₂</option>
+          <option value="44.01">Углекислый газ CO₂</option>
+        </select>
+      </div>
+      <div class="row" id="r-m" style="--c:var(--fM)">
+        <div class="top"><label class="name" for="m">Масса m, г</label><span class="val cM" id="om"></span></div>
+        <input type="range" id="m" min="1" max="100" step="0.5" value="28">
+      </div>
+      <div class="row" id="r-T" style="--c:var(--fT)">
+        <div class="top"><label class="name" for="T">Температура T, К</label><span class="val cT" id="oT"></span></div>
+        <input type="range" id="T" min="100" max="800" step="5" value="300">
+      </div>
+      <div class="row" id="r-V" style="--c:var(--fV)">
+        <div class="top"><label class="name" for="V">Объём V, л</label><span class="val cV" id="oV"></span></div>
+        <input type="range" id="V" min="1" max="50" step="0.5" value="10">
+      </div>
+      <div class="row" id="r-p" style="--c:var(--fP)">
+        <div class="top"><label class="name" for="p">Давление p, кПа</label><span class="val cp" id="op"></span></div>
+        <input type="range" id="p" min="10" max="2000" step="5" value="250">
+      </div>
+      <div class="warn" id="warn" role="status"></div>
+      <div class="hint" style="margin-top:0">Частные случаи (при постоянной массе газа):</div>
+      <div class="laws">
+        <button type="button" class="btn" data-s="iso">Изотерма</button>
+        <button type="button" class="btn" data-s="bar">Изобара</button>
+        <button type="button" class="btn" data-s="chor">Изохора</button>
+        <button type="button" class="btn" id="adb" aria-pressed="false">Адиабата</button>
+      </div>
+
+      <div class="law-hint-box" id="lawHintBox">
+        <div id="lawHintTitle" style="font-weight:700;margin-bottom:4px;color:var(--cV);"></div>
+        <div id="lawHintVal"></div>
+      </div>
+
+      <p class="hint" id="shint"></p>
+    </section>
+  </div>
+
+  <section class="card sub">
+    <h2>Подстановка значений</h2>
+    <div class="eq" id="eq1"></div>
+    <div class="eq" id="eq2"></div>
+    <div class="derived">
+      <div><small>Количество вещества ν = m/M</small><strong id="dn"></strong></div>
+      <div><small>Число молекул N = ν·N<sub>A</sub></small><strong id="dN"></strong></div>
+      <div><small>Плотность ρ = m/V</small><strong id="dr"></strong></div>
+      <div><small>Среднеквадратичная скорость √(3RT/M)</small><strong id="dv"></strong></div>
+      <div><small>Средняя кинетическая энергия поступательного движения (3/2)kT</small><strong id="de"></strong></div>
+      <div><small>Давление в атмосферах</small><strong id="da"></strong></div>
+    </div>
+  </section>
+</div>
+<footer>© Кинаш И. А. Все права защищены.</footer>
+<script>
+(function(){
+  var R = 8.314, NA = 6.022e23, KB = 1.380649e-23;
+  var $ = function(id){ return document.getElementById(id); };
+  var KEYS = ['m','T','V','p'];
+  var el = {m:$('m'), T:$('T'), V:$('V'), p:$('p')};
+  var rows = {m:$('r-m'), T:$('r-T'), V:$('r-V'), p:$('r-p')};
+  var outs = {m:$('om'), T:$('oT'), V:$('oV'), p:$('op')};
+  var names = {m:'масса', T:'температура', V:'объём', p:'давление'};
+  var gas = $('gas');
+  var unknown = 'p';
+  var adiab = false, activeLaw = null, base = {T: 300, V: 10, p: 250};
+  var GAMMA = {'2.016': 1.4, '4.003': 5 / 3, '28.01': 1.4, '32.00': 1.4, '44.01': 4 / 3};
+  function gamma(){ return GAMMA[gas.value] || 1.4; }
+  var s = {m:28, T:300, V:10, p:250, M:28.01};
+
+  function fmt(x, d){
+    return x.toLocaleString('ru-RU', {maximumFractionDigits:d, minimumFractionDigits:d});
+  }
+  function sci(x){
+    var e = Math.floor(Math.log10(x));
+    var a = x / Math.pow(10, e);
+    if (a >= 9.995) { a = 1; e += 1; }
+    var sup = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+    var es = String(Math.abs(e)).replace(/\d/g, function(c){ return sup.charAt(+c); });
+    return fmt(a, 2) + '·10' + (e < 0 ? '⁻' : '') + es;
+  }
+  function clamp(x, a, b){ return Math.max(a, Math.min(b, x)); }
+
+  function solve(){
+    s.M = parseFloat(gas.value);
+    if (adiab) {
+      s.m = parseFloat(el.m.value); s.V = parseFloat(el.V.value);
+      s.T = base.T * Math.pow(base.V / s.V, gamma() - 1);
+      s.p = (s.m / s.M) * R * s.T / s.V;
+      el.T.value = s.T; el.p.value = s.p;
+      return;
+    }
+    KEYS.forEach(function(k){ if (k !== unknown) s[k] = parseFloat(el[k].value); });
+    var n = s.m / s.M;
+    if (unknown === 'p') s.p = n * R * s.T / s.V;
+    if (unknown === 'V') s.V = n * R * s.T / s.p;
+    if (unknown === 'T') s.T = s.p * s.V / (n * R);
+    if (unknown === 'm') s.m = s.p * s.V * s.M / (R * s.T);
+    el[unknown].value = s[unknown];
+  }
+
+  function setSTP(){
+    adiab = false; activeLaw = null; unknown = 'p';
+    document.querySelector('input[name=u][value=p]').checked = true;
+    gas.value = '28.01'; // Азот
+    el.m.value = 28.01;  // 1 моль (28.01 г)
+    el.T.value = 273;    // 0 °C
+    el.V.value = 22.4;   // 22.4 л
+    $('shint').textContent = 'Установлены нормальные условия (н. у.): T = 273 К, p ≈ 101 кПа, V ≈ 22.4 л для 1 моль газа.';
+    $('lawHintBox').style.display = 'none';
+    render();
+  }
+
+  function updateLawHint(){
+    var box = $('lawHintBox');
+    if (!activeLaw) { box.style.display = 'none'; return; }
+    box.style.display = 'block';
+    if (activeLaw === 'iso') {
+      $('lawHintTitle').textContent = 'Закон Бойля — Мариотта (Изотермический процесс: T = const)';
+      $('lawHintVal').innerHTML = 'p₁·V₁ = p₂·V₂ &nbsp;⇒&nbsp; <b>' + fmt(base.p, 0) + ' кПа · ' + fmt(base.V, 1) + ' л</b> = <b>' + fmt(s.p, 0) + ' кПа · ' + fmt(s.V, 1) + ' л</b> (≈ ' + fmt(base.p * base.V, 0) + ')';
+    } else if (activeLaw === 'bar') {
+      $('lawHintTitle').textContent = 'Закон Гей-Люссака (Изобарный процесс: p = const)';
+      $('lawHintVal').innerHTML = 'V₁ / T₁ = V₂ / T₂ &nbsp;⇒&nbsp; <b>' + fmt(base.V, 1) + ' л / ' + fmt(base.T, 0) + ' К</b> = <b>' + fmt(s.V, 1) + ' л / ' + fmt(s.T, 0) + ' К</b>';
+    } else if (activeLaw === 'chor') {
+      $('lawHintTitle').textContent = 'Закон Шарля (Изохорный процесс: V = const)';
+      $('lawHintVal').innerHTML = 'p₁ / T₁ = p₂ / T₂ &nbsp;⇒&nbsp; <b>' + fmt(base.p, 0) + ' кПа / ' + fmt(base.T, 0) + ' К</b> = <b>' + fmt(s.p, 0) + ' кПа / ' + fmt(s.T, 0) + ' К</b>';
+    }
+  }
+
+  function equations(){
+    var M = fmt(s.M, 1), m = fmt(s.m, 1), T = fmt(s.T, 0), V = fmt(s.V, 1), p = fmt(s.p, 0), r = fmt(R, 3);
+    if (adiab) {
+      var g = gamma(), nn = s.m / s.M, ii = 2 / (g - 1);
+      var Aw = (ii / 2) * nn * R * (base.T - s.T);
+      $('eq1').textContent = 'Адиабата (Q = 0): T·V^(γ−1) = const, p·V^γ = const, γ = ' + fmt(g, 2);
+      $('eq2').innerHTML = '<u></u>';
+      $('eq2').firstChild.textContent = 'T = ' + fmt(base.T, 0) + ' К · (' + fmt(base.V, 1) + ' л / ' + V + ' л)^' + fmt(g - 1, 2) +
+        ' = ' + T + ' К;  p = νRT/V = ' + p + ' кПа;  A = (i/2)·ν·R·(T₀ − T) = ' + fmt(Aw, 0) + ' Дж';
+      return;
+    }
+    var sym = {
+      p: 'p = (m/M)·R·T / V',
+      V: 'V = (m/M)·R·T / p',
+      T: 'T = p·V / ((m/M)·R)',
+      m: 'm = p·V·M / (R·T)'
+    };
+    var num = {
+      p: 'p = (' + m + ' г / ' + M + ' г/моль) · ' + r + ' Дж/(моль·К) · ' + T + ' К / ' + V + ' л = ' + p + ' кПа',
+      V: 'V = (' + m + ' г / ' + M + ' г/моль) · ' + r + ' Дж/(моль·К) · ' + T + ' К / ' + p + ' кПа = ' + V + ' л',
+      T: 'T = ' + p + ' кПа · ' + V + ' л / ((' + m + ' г / ' + M + ' г/моль) · ' + r + ' Дж/(моль·К)) = ' + T + ' К',
+      m: 'm = ' + p + ' кПа · ' + V + ' л · ' + M + ' г/моль / (' + r + ' Дж/(моль·К) · ' + T + ' К) = ' + m + ' г'
+    };
+    $('eq1').textContent = 'Из pV = (m/M)RT получаем: ' + sym[unknown];
+    $('eq2').innerHTML = '<u></u>';
+    $('eq2').firstChild.textContent = num[unknown];
+  }
+
+  function render(){
+    solve();
+    var n = s.m / s.M;
+    KEYS.forEach(function(k){
+      var c = adiab ? (k === 'T' || k === 'p') : (k === unknown);
+      el[k].disabled = c;
+      rows[k].classList.toggle('calc', c);
+    });
+    outs.m.textContent = fmt(s.m, 1);
+    outs.T.textContent = fmt(s.T, 0);
+    outs.V.textContent = fmt(s.V, 1);
+    outs.p.textContent = fmt(s.p, 0);
+    $('oM').textContent = fmt(s.M, 1) + ' г/моль';
+
+    var chk = adiab ? ['T', 'p'] : [unknown], bad = null;
+    chk.forEach(function(k){
+      if (!bad && (s[k] < parseFloat(el[k].min) || s[k] > parseFloat(el[k].max))) bad = k;
+    });
+    $('warn').textContent = bad
+      ? 'Вычисленное значение (' + names[bad] + ') вышло за пределы ползунка. Измените другие параметры.'
+      : '';
+
+    Array.prototype.forEach.call(document.querySelectorAll('.chip[data-u]'), function(c){
+      var cu = c.getAttribute('data-u');
+      var on = adiab ? (cu === 'T' || cu === 'p') : (cu === unknown);
+      c.classList.toggle('unk', on);
+      c.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    $('adb').setAttribute('aria-pressed', adiab ? 'true' : 'false');
+    $('adb').classList.toggle('on', adiab);
+    equations();
+    updateLawHint();
+
+    $('dn').textContent = fmt(n, 3) + ' моль';
+    $('dN').textContent = sci(n * NA);
+    $('dr').textContent = fmt(s.m / s.V, 2) + ' г/л';
+    $('dv').textContent = fmt(Math.sqrt(3 * R * s.T / (s.M / 1000)), 0) + ' м/с';
+    $('de').textContent = fmt(1.5 * KB * s.T * 1e21, 2) + '·10⁻²¹ Дж';
+    $('da').textContent = fmt(s.p / 101.325, 2) + ' атм';
+
+    var lg = clamp((Math.log10(s.p) - 1) / (Math.log10(2500) - 1), 0, 1);
+    $('gbar').style.width = (lg * 100) + '%';
+    $('gtxt').textContent = fmt(s.p, 0) + ' кПа';
+    sync();
+  }
+
+  /* ---------- модель частиц и живой график ---------- */
+  var cv = $('cv'), ctx = cv.getContext('2d');
+  var chartCv = $('chartCv'), chartCtx = chartCv.getContext('2d');
+  var W = 0, H = 0, parts = [], wallX = 0, targetWall = 0, paused = false, last = 0;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    var dpr = window.devicePixelRatio || 1;
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    var cW = chartCv.clientWidth, cH = chartCv.clientHeight;
+    chartCv.width = Math.round(cW * dpr); chartCv.height = Math.round(cH * dpr);
+    chartCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    sync();
+    wallX = targetWall;
+  }
+
+  function sync(){
+    var n = s.m / s.M;
+    var N = Math.round(clamp(8 + 20 * Math.log10(1 + n * 10), 4, 70));
+    var f = 0.2 + 0.8 * (clamp(s.V, 1, 50) - 1) / 49;
+    targetWall = 14 + Math.max(60, W - 90) * f;
+    while (parts.length < N) {
+      var a = Math.random() * Math.PI * 2;
+      parts.push({x: 20 + Math.random() * 60, y: 10 + Math.random() * Math.max(10, H - 20),
+                  dx: Math.cos(a), dy: Math.sin(a), k: 0.55 + Math.random() * 0.9});
+    }
+    parts.length = N;
+  }
+
+  function setPaused(v){
+    paused = v;
+    $('pause').textContent = paused ? 'Запустить' : 'Остановить';
+  }
+
+  function drawChart(){
+    var cW = chartCv.clientWidth, cH = chartCv.clientHeight;
+    chartCtx.clearRect(0, 0, cW, cH);
+
+    // Сетка и ося
+    chartCtx.strokeStyle = 'rgba(255,255,255,0.1)'; chartCtx.lineWidth = 1;
+    chartCtx.beginPath();
+    chartCtx.moveTo(35, 10); chartCtx.lineTo(35, cH - 20); chartCtx.lineTo(cW - 10, cH - 20);
+    chartCtx.stroke();
+
+    chartCtx.fillStyle = '#a3a9d0'; chartCtx.font = '11px sans-serif';
+    chartCtx.fillText('p', 20, 15); chartCtx.fillText('V', cW - 15, cH - 8);
+
+    // Масштаб осей (V от 1 до 50, p от 10 до 2000)
+    var padLeft = 35, padBottom = 20, plotW = cW - padLeft - 15, plotH = cH - padBottom - 10;
+
+    // Рисуем изотерму текущую тонкой линией
+    chartCtx.strokeStyle = 'rgba(170, 160, 255, 0.35)'; chartCtx.lineWidth = 2; chartCtx.setLineDash([4, 4]);
+    chartCtx.beginPath();
+    var n = s.m / s.M;
+    for (var vCoord = 1; vCoord <= 50; vCoord += 1) {
+      var pVal = (n * R * s.T) / vCoord; // в кПа
+      var x = padLeft + ((vCoord - 1) / 49) * plotW;
+      var y = cH - padBottom - ((clamp(pVal, 10, 2000) - 10) / 1990) * plotH;
+      if (vCoord === 1) chartCtx.moveTo(x, y); else chartCtx.lineTo(x, y);
+    }
+    chartCtx.stroke();
+    chartCtx.setLineDash([]);
+
+    // Текущая точка (V, p)
+    var curX = padLeft + ((s.V - 1) / 49) * plotW;
+    var curY = cH - padBottom - ((clamp(s.p, 10, 2000) - 10) / 1990) * plotH;
+
+    chartCtx.fillStyle = '#ffcb3d';
+    chartCtx.beginPath(); chartCtx.arc(curX, curY, 5, 0, Math.PI * 2); chartCtx.fill();
+    chartCtx.strokeStyle = '#0b0e24'; chartCtx.lineWidth = 1.5; chartCtx.stroke();
+  }
+
+  function frame(t){
+    var dt = last ? Math.min(t - last, 50) / 16.67 : 1;
+    last = t;
+    wallX += (targetWall - wallX) * Math.min(1, 0.12 * dt);
+    var T = clamp(s.T, 100, 800);
+    var speed = Math.min(0.5 * Math.sqrt(T / s.M), 8) * (paused ? 0 : dt);
+    var r = 4.5, x0 = 14;
+    ctx.clearRect(0, 0, W, H);
+    ctx.shadowBlur = 0;
+    var x0r = 14, pw = 12;
+    // камера
+    ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    ctx.fillRect(x0r, 6, wallX - x0r, H - 12);
+    ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(wallX, 6); ctx.lineTo(x0r, 6); ctx.lineTo(x0r, H - 6); ctx.lineTo(wallX, H - 6); ctx.stroke();
+    // поршень и шток
+    var g = ctx.createLinearGradient(wallX, 0, wallX + pw, 0);
+    g.addColorStop(0, '#e8ecfa'); g.addColorStop(1, '#8e98c4');
+    ctx.fillStyle = g; ctx.fillRect(wallX, 0, pw, H);
+    ctx.fillStyle = '#aab3d8'; ctx.fillRect(wallX + pw, H / 2 - 4, Math.max(0, W - wallX - pw), 8);
+    ctx.fillStyle = '#e8ecfa'; ctx.fillRect(W - 10, H / 2 - 28, 10, 56);
+    // молекулы
+    var hue = 200 - 175 * (T - 100) / 700;
+    var col = 'hsl(' + hue + ',90%,62%)';
+    ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 12;
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i], v = speed * p.k;
+      p.x += p.dx * v; p.y += p.dy * v;
+      if (p.x < x0 + r) { p.x = x0 + r; p.dx = Math.abs(p.dx); }
+      if (p.x > wallX - r) { p.x = wallX - r; p.dx = -Math.abs(p.dx); }
+      if (p.y < r + 2) { p.y = r + 2; p.dy = Math.abs(p.dy); }
+      if (p.y > H - r - 2) { p.y = H - r - 2; p.dy = -Math.abs(p.dy); }
+      ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
+    }
+
+    drawChart();
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- события ---------- */
+  KEYS.forEach(function(k){ el[k].addEventListener('input', function(){ activeLaw = null; render(); }); });
+  gas.addEventListener('change', render);
+  $('btn-STP').addEventListener('click', function(e){ e.preventDefault(); setSTP(); });
+
+  Array.prototype.forEach.call(document.querySelectorAll('input[name=u]'), function(rd){
+    rd.addEventListener('change', function(){ adiab = false; activeLaw = null; unknown = rd.value; $('shint').textContent = ''; render(); });
+  });
+
+  var hints = {
+    iso: 'Изотерма: T постоянна, p·V = const. Найдите p и двигайте V: давление меняется обратно пропорционально объёму.',
+    bar: 'Изобара: p постоянно, V/T = const. Найдите V и меняйте T: объём растёт вместе с температурой.',
+    chor: 'Изохора: V постоянен, p/T = const. Найдите p и меняйте T: давление растёт вместе с температурой.'
+  };
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-s]'), function(b){
+    b.addEventListener('click', function(){
+      var k = b.getAttribute('data-s');
+      adiab = false;
+      activeLaw = k;
+      base = {T: s.T, V: s.V, p: s.p};
+      unknown = (k === 'bar') ? 'V' : 'p';
+      document.querySelector('input[name=u][value=' + unknown + ']').checked = true;
+      $('shint').textContent = hints[k];
+      render();
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.chip[data-u]'), function(c){
+    c.addEventListener('click', function(){
+      adiab = false; activeLaw = null;
+      unknown = c.getAttribute('data-u');
+      document.querySelector('input[name=u][value=' + unknown + ']').checked = true;
+      $('shint').textContent = '';
+      render();
+    });
+  });
+
+  $('adb').addEventListener('click', function(){
+    if (adiab) { adiab = false; activeLaw = null; $('shint').textContent = ''; render(); return; }
+    base = {T: s.T, V: s.V, p: s.p};
+    adiab = true; activeLaw = null;
+    $('shint').textContent = 'Адиабатный процесс: теплообмена нет (Q = 0). Начальное состояние: T₀ = ' + fmt(s.T, 0) +
+      ' К, V₀ = ' + fmt(s.V, 1) + ' л. Двигайте ползунок объёма: при сжатии газ нагревается, при расширении охлаждается, а давление меняется быстрее, чем при изотермическом процессе.';
+    render();
+  });
+
+  $('pause').addEventListener('click', function(){ setPaused(!paused); });
+  window.addEventListener('resize', resize);
+
+  setPaused(reduce);
+  resize();
+  render();
+  wallX = targetWall;
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
